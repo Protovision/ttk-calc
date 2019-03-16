@@ -1,0 +1,57 @@
+::selection {
+	color: White;
+	background: SteelBlue;
+}
+body {
+	margin: 3em;
+	font-family: 'Nanum Gothic', sans-serif;
+	color: White;
+	background-color: #1c1c1c;
+	line-height: 2.0;
+}
+a {
+	color: SteelBlue;
+	text-decoration: none;
+}
+a:hover,a:focus {
+	text-decoration: underline;
+}
+table {
+	border: thin solid;
+	border-collapse: collapse;
+}
+th,td {
+	border: thin solid;
+	padding: 0.5em;
+}
+input[type=number] {
+	border: thin solid SteelBlue;
+	color: White;
+	background-color: #1c1c1c;
+	appearance: textfield;
+	-webkit-appearance: textfield;
+	-moz-appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+}
+input[type=button],input[type=submit] {
+	border: thin solid SteelBlue;
+	padding: 0.5em;
+	color: White;
+	background-color: Black;
+}
+input[type=number]:hover,input[type=number]:focus {
+	border: thin solid Yellow;
+}
+input[type=button]:hover,
+input[type=button]:focus,
+input[type=submit]:hover,
+input[type=submit]:focus {
+	border: thin solid Yellow;
+}
+input[type=button]:active,
+input[type=submit]:active {
+	border: thin solid Green;
+}
