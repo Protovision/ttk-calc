@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,36 +14,99 @@
 			<h1>Game Agnostic TTK Calculator</h1>
 		</header>
 		<main>
-			<form id="ttk-form">
-				<!--<input type="button" value="Reset input" id="reset"><br>-->
-				<label for="health">Target health:</label><br>
-				<input type="number" id="health" name="health" min="0.0" step="1" required><br>
-				<label for="armor">Target armor:</label><br>
-				<input type="number" id="armor" name="armor" min="0.0" step="1" value="0" required><br>
-				<label for="armor-protection" title="0.0 to 1.0 indicating percent of damage that armor absorbs">Armor protection factor:</label><br>
-				<input type="number" id="armor-protection" name="armor-protection" min="0.0" max="1.0" step="0.000001" value="0.66" required title="0.0 to 1.0 indicating percent of damage that armor absorbs"><br>
-				<label for="damage">Damage per round:</label><br>
-				<input type="number" id="damage" name="damage" min="1.0" step="1" required><br>
-				<label for="rpm">Rounds per minute:</label><br>
-				<input type="number" id="rpm" name="rpm" min="1.0" step="1" required><br>
-				<input type="checkbox" id="include-table" name="include-table" checked="checked">
-				<label for="include-table">Include table output?</label><br>
+			<form>
+				<label for="health">Target health:</label>
 				<br>
-				<input type="submit" id="calculate" value="Calculate TTK"><br>
+				<input id="health"
+						title="A positive integer."
+						type="number"
+						min="0"
+						step="1"
+						required>
 				<br>
+				<label for="armor">Target armor:</label>
+				<br>
+				<input id="armor"
+						title="A positive integer. Damage gets subtracted from armor before getting subtracted from health."
+						type="number"
+						min="0"
+						step="1"
+						value="0"
+						required>
+				<br>
+				<label for="armor-protection">Armor protection factor:</label>
+				<br>
+				<input id="armor-protection"
+						title="A number from 0.0 to 1.0. Indicates the percent of damage that armor absorbs from each shot."
+						type="number"
+						min="0.0"
+						max="1.0"
+						step="0.00001"
+						value="1.0"
+						required>
+				<br>
+				<label for="damage">Damage per shot:</label>
+				<br>
+				<input id="damage"
+						title="A positive integer greater than 0."
+						type="number"
+						min="1.0"
+						step="1"
+						required>
+				<br>
+				<label for="rate">Firing rate:</label>
+				<br>
+				<input id="rate"
+						title="A positive number greater than 0. Indicates the time between each round fired."
+						type="number"
+						min="0.00001"
+						step="0.00001"
+						required>
+				<select id="rate-unit">
+					<option value="rpm">Rounds per minute</option>
+					<option value="rps">Rounds per second</option>
+					<option value="spr">Seconds per round</option>
+					<option value="mpr">Milliseconds per round</option>
+				</select>
+				<br>
+				<label for="ammo">Ammo count:</label>
+				<br>
+				<input id="ammo"
+						title="A positive integer. Indicates the number of rounds that can be fired before reloading."
+						type="number"
+						min="0"
+						step="1"
+						required>
+				<input id="infinite-ammo" type="checkbox" checked="0" defaultChecked="0">
+				<label for="infinite-ammo">Infinite ammo?</label>
+				<br>
+				<label for="reload">Reload time:</label>
+				<br>
+				<input id="reload"
+						title="A positive number. The time in seconds it takes to reload."
+						type="number"
+						min="0"
+						step="0.00001"
+						required>
+				<br>
+				<!-- TODO: Support burst fire weapons weapons and charge-up weapons -->
+				<input id="include-combat-table" type="checkbox">
+				<label for="include-combat-table">Include table output?</label>
+				<br>
+				<input id="submit" type="submit" value="Calculate">
 			</form>
-			<b>Result: <span id="result"></span></b><br>
-			<table id="ttk-table">
-				<!--
-				<tr>
-					<th>Shot number</th>
-					<th>Time elapsed</th>
-					<th>Health remaining</th>
-					<th>Armor remaining</th>
-				</tr>
-				-->
-			</table>
-			<br>
+			<fieldset>
+				<legend>Results</legend>
+				<label for="stk"><b>Shots to Kill:</b></label>
+				<br>
+				<input id="stk" type="number" readonly>
+				<br>
+				<label for="ttk"><b>Time to kill:</b></label>
+				<br>
+				<input id="ttk" type="number" readonly>
+				<br>
+				<table id="combat-table"></table>
+			</fieldset>
 		</main>
 		<footer>
 			Created by <a href="mailto:markswoope@outlook.com">Mark Swoope</a>

@@ -1,22 +1,47 @@
+:root {
+	--font-family: 'Nanum Gothic', sans-serif;
+	--foreground-color: White;
+	--background-color: #1c1c1c;
+	--selection-foreground-color: Black;
+	--selection-background-color: LightSteelBlue;
+	--input-border-color: SteelBlue;
+	--input-border-color-hover-focus: #d78700;
+	--input-foreground-color: White;
+	--input-background-color: #1c1c1c;
+	--button-border-color: SteelBlue;
+	--button-border-color-hover-focus: #d78700;
+	--button-border-color-active: #005f00;
+	--button-foreground-color: White;
+	--button-background-color: #1c1c1c;
+	--link-color: SteelBlue;
+	--link-color-hover-focus: #d78700;
+	--link-color-active: #005f00;
+	--disabled-border-color: Black;
+}
 ::selection {
-	color: White;
-	background: SteelBlue;
+	color: var(--selection-foreground-color);
+	background: var(--selection-background-color);
 }
 body {
 	margin: 3em;
-	font-family: 'Nanum Gothic', sans-serif;
-	color: White;
-	background-color: #1c1c1c;
+	font-family: var(--font-family);
+	color: var(--foreground-color);
+	background-color: var(--background-color);
 	line-height: 2.0;
 }
 a {
-	color: SteelBlue;
+	color: var(--link-color);
 	text-decoration: none;
 }
 a:hover,a:focus {
+	color: var(--link-color-hover-focus);
 	text-decoration: underline;
 }
+a:active {
+	color: var(--link-color-active);
+}
 table {
+	margin: 0.5em 0;
 	border: thin solid;
 	border-collapse: collapse;
 }
@@ -24,10 +49,14 @@ th,td {
 	border: thin solid;
 	padding: 0.5em;
 }
+input,select {
+	margin: 0.25em 0;
+	border: thin solid;
+	border-color: var(--input-border-color);
+	color: var(--input-foreground-color);
+	background-color: var(--input-background-color);
+}
 input[type=number] {
-	border: thin solid SteelBlue;
-	color: White;
-	background-color: #1c1c1c;
 	appearance: textfield;
 	-webkit-appearance: textfield;
 	-moz-appearance: textfield;
@@ -36,22 +65,35 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
 	-webkit-appearance: none;
 }
-input[type=button],input[type=submit] {
-	border: thin solid SteelBlue;
+input[type=button],
+input[type=submit] {
 	padding: 0.5em;
-	color: White;
-	background-color: Black;
+	color: var(--button-foreground-color);
+	background-color: var(--button-background-color);
 }
-input[type=number]:hover,input[type=number]:focus {
-	border: thin solid Yellow;
+input:hover,
+input:focus,
+select:hover,
+select:focus {
+	border: thin solid;
+	border-color: var(--input-border-color-hover-focus);
 }
 input[type=button]:hover,
 input[type=button]:focus,
 input[type=submit]:hover,
 input[type=submit]:focus {
-	border: thin solid Yellow;
+	border: thin solid;
+	border-color: var(--button-border-color-hover-focus);
 }
-input[type=button]:active,
-input[type=submit]:active {
-	border: thin solid Green;
+input[type=button]:active,input[type=submit]:active {
+	border: thin solid;
+	border-color: var(--button-border-color-active);
+}
+[disabled],[disabled]:hover,[disabled]:focus,[disabled]:active {
+	border: thin solid;
+	border-color: var(--disabled-border-color);
+}
+[readonly],[readonly]:hover,[readonly]:focus,[readonly]:active {
+	border: thin solid;
+	border-color: var(--input-border-color);
 }
