@@ -26,19 +26,24 @@
 				<input type="number" id="damage" name="damage" min="1.0" step="1" required><br>
 				<label for="rpm">Rounds per minute:</label><br>
 				<input type="number" id="rpm" name="rpm" min="1.0" step="1" required><br>
+				<input type="checkbox" id="include-table" name="include-table" checked="checked">
+				<label for="include-table">Include table output?</label><br>
 				<br>
 				<input type="submit" id="calculate" value="Calculate TTK"><br>
 				<br>
 			</form>
 			<b>Result: <span id="result"></span></b><br>
 			<table id="ttk-table">
+				<!--
 				<tr>
 					<th>Shot number</th>
 					<th>Time elapsed</th>
 					<th>Health remaining</th>
 					<th>Armor remaining</th>
 				</tr>
+				-->
 			</table>
+			<br>
 		</main>
 		<footer>
 			Created by <a href="mailto:markswoope@outlook.com">Mark Swoope</a>

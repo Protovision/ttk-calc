@@ -34,6 +34,7 @@
 	var armor_protection_input = document.getElementById("armor-protection");
 	var damage_input = document.getElementById("damage");
 	var rpm_input = document.getElementById("rpm");
+	var include_table_input = document.getElementById("include-table");
 	var form = document.getElementById("ttk-form");
 	var result_element = document.getElementById("result");
 	var ttk_table = document.getElementById("ttk-table");
@@ -64,15 +65,35 @@
 	*/
 	form.addEventListener("submit", function(e) {
 		e.preventDefault();
-		while (ttk_table.childElementCount > 1) {
+		while (ttk_table.childElementCount > 0) {
 			ttk_table.removeChild(ttk_table.lastChild);
+		}
+		if (include_table_input.checked) {
+			var first_row = document.createElement("tr");
+			var c1 = document.createElement("th");
+			c1.appendChild(document.createTextNode("Shot number"));
+			var c2 = document.createElement("th");
+			c2.appendChild(document.createTextNode("Time elapsed"));
+			var c3 = document.createElement("th");
+			c3.appendChild(document.createTextNode("Health remaining"));
+			var c4 = document.createElement("th");
+			c4.appendChild(document.createTextNode("Armor remaining"));
+			first_row.appendChild(c1);
+			first_row.appendChild(c2);
+			first_row.appendChild(c3);
+			first_row.appendChild(c4);
+			ttk_table.appendChild(first_row);
 		}
 		var health = Number(health_input.value);
 		var armor = Number(armor_input.value);
 		var armor_protection = Number(armor_protection_input.value);
 		var damage = Number(damage_input.value);
 		var rpm = Number(rpm_input.value);
-		var ttk = calculate_ttk(health, armor, armor_protection, damage, rpm, ttk_iteration);
+		if (include_table_input.checked) {
+			var ttk = calculate_ttk(health, armor, armor_protection, damage, rpm, ttk_iteration);
+		} else {
+			var ttk = calculate_ttk(health, armor, armor_protection, damage, rpm, null);
+		}
 		if (result_element.firstChild != null) {
 			result_element.removeChild(result_element.firstChild);
 		}
