@@ -4,6 +4,7 @@
 									armor_protection,
 									damage,
 									rpm,
+									accuracy,
 									ammo_count,
 									reload_time,
 									infinite_ammo,
@@ -15,22 +16,26 @@
 		var ammo_remaining = ammo_count;
 		if (health > 0) {
 			while (true) {
-				var armor_damage = Math.ceil(damage * armor_protection);
-				if (armor_damage > armor) {
-					armor_damage = armor;
+				var hit_or_miss = "miss";
+				if (Math.random() >= (1.0 - accuracy)) {
+					hit_or_miss = "hit";
+					var armor_damage = Math.ceil(damage * armor_protection);
+					if (armor_damage > armor) {
+						armor_damage = armor;
+					}
+					armor -= armor_damage;
+					var health_damage = damage - armor_damage;
+					if (health_damage > health) {
+						health_damage = health;
+					}
+					health -= health_damage;
 				}
-				armor -= armor_damage;
-				var health_damage = damage - armor_damage;
-				if (health_damage > health) {
-					health_damage = health;
-				}
-				health -= health_damage;
 				++rounds_fired;
 				if (!infinite_ammo) {
 					--ammo_remaining;
 				}
 				if (iter_cb != null) {
-					iter_cb(rounds_fired, seconds_elapsed, ammo_remaining, infinite_ammo, health, armor);
+					iter_cb(rounds_fired, seconds_elapsed, hit_or_miss, ammo_remaining, infinite_ammo, health, armor);
 				}
 				if (health == 0.0) {
 					break;
@@ -53,6 +58,7 @@
 	var damage_input = document.getElementById("damage");
 	var rate_input = document.getElementById("rate");
 	var rate_unit_input = document.getElementById("rate-unit");
+	var accuracy_input = document.getElementById("accuracy");
 	var ammo_input = document.getElementById("ammo");
 	var infinite_ammo_input = document.getElementById("infinite-ammo");
 	var reload_input = document.getElementById("reload");
@@ -63,6 +69,7 @@
 	var combat_table_output = document.getElementById("combat-table");
 	function calculation_iteration_callback(shots_fired, 
 											time_elapsed,
+											hit_or_miss,
 											ammo_remaining,
 											infinite_ammo,
 											health_remaining,
@@ -74,20 +81,23 @@
 		var c2 = document.createElement("td");
 		c2.appendChild(document.createTextNode(time_elapsed.toFixed(6)));
 		var c3 = document.createElement("td");
-		if (infinite_ammo) {
-			c3.appendChild(document.createTextNode("-"));
-		} else {
-			c3.appendChild(document.createTextNode(ammo_remaining));
-		}
+		c3.appendChild(document.createTextNode(hit_or_miss));
 		var c4 = document.createElement("td");
-		c4.appendChild(document.createTextNode(health_remaining));
+		if (infinite_ammo) {
+			c4.appendChild(document.createTextNode("-"));
+		} else {
+			c4.appendChild(document.createTextNode(ammo_remaining));
+		}
 		var c5 = document.createElement("td");
-		c5.appendChild(document.createTextNode(armor_remaining));
+		c5.appendChild(document.createTextNode(health_remaining));
+		var c6 = document.createElement("td");
+		c6.appendChild(document.createTextNode(armor_remaining));
 		row.appendChild(c1);
 		row.appendChild(c2);
 		row.appendChild(c3);
 		row.appendChild(c4);
 		row.appendChild(c5);
+		row.appendChild(c6);
 		combat_table_output.appendChild(row);
 	};
 	/*
@@ -126,16 +136,19 @@
 			var c2 = document.createElement("th");
 			c2.appendChild(document.createTextNode("Time elapsed"));
 			var c3 = document.createElement("th");
-			c3.appendChild(document.createTextNode("Ammo remaining"));
+			c3.appendChild(document.createTextNode("Hit or Miss"));
 			var c4 = document.createElement("th");
-			c4.appendChild(document.createTextNode("Health remaining"));
+			c4.appendChild(document.createTextNode("Ammo remaining"));
 			var c5 = document.createElement("th");
-			c5.appendChild(document.createTextNode("Armor remaining"));
+			c5.appendChild(document.createTextNode("Health remaining"));
+			var c6 = document.createElement("th");
+			c6.appendChild(document.createTextNode("Armor remaining"));
 			first_row.appendChild(c1);
 			first_row.appendChild(c2);
 			first_row.appendChild(c3);
 			first_row.appendChild(c4);
 			first_row.appendChild(c5);
+			first_row.appendChild(c6);
 			combat_table_output.appendChild(first_row);
 		}
 		var health = Number(health_input.value);
@@ -154,6 +167,7 @@
 		} else if (rate_unit == "mpr") {
 			rpm = 1000.0 / rate * 60.0;
 		}
+		var accuracy = Number(accuracy_input.value);
 		var infinite_ammo = Boolean(infinite_ammo_input.checked);
 		var ammo = 0;
 		var reload = 0.0;
@@ -171,6 +185,7 @@
 									armor_protection,
 									damage,
 									rpm,
+									accuracy,
 									ammo,
 									reload,
 									infinite_ammo,
