@@ -20,7 +20,7 @@
 					(distance - params["falloff-begin"]));
 			}
 		}
-
+	
 		var ms_per_round = 0;
 		if (params["rate-unit"] == "rpm") {
 			ms_per_round = Math.trunc(1.0 / params["rate"] * 60.0 * 1000.0);
@@ -48,13 +48,12 @@
 			position = params["position"];
 			speed = params["speed"];
 			acceleration = params["acceleration"];
-			console.log("position: " + position);
-			console.log("speed: " + speed);
-			console.log("accel: " + acceleration);
 		}
+		var time_to_impact = Number(Number(distance / speed).toFixed(3));
 
 		var max_ammo = 0;
 		var reload_time = 0;
+		var reload_count = 0;
 		var uses_ammo = params["uses-ammo"];
 		if (uses_ammo) {
 			max_ammo = params["ammo-count"];
@@ -99,6 +98,7 @@
 		{
 			if (weapon_status == "reloading" && ms >= weapon_reload_completion_time) {
 				ammo = max_ammo;
+				++reload_count;
 				weapon_status = "ready";
 			} else if (weapon_status == "refiring" && ms >= weapon_refire_completion_time) {
 				weapon_status = "ready";
@@ -158,7 +158,7 @@
 				}
 			}
 		}
-		return [ damage, rounds_hit, ms / 1000.0 ];
+		return [ time_to_impact, damage, rounds_hit, reload_count, ms / 1000.0 ];
 	};
 
 	function update_disabled_for_checkbox_group(k)
@@ -196,8 +196,10 @@
 			"reload-time",
 			"include-simulation-log",
 			"submit",
+			"time-to-impact",
 			"damage-on-impact",
 			"stk",
+			"reloads-required",
 			"ttk",
 			"simulation-log"
 		].forEach(function(x) {
@@ -248,9 +250,11 @@
 				"ammo-count": Number(elements["ammo-count"].value),
 				"reload-time": Number(elements["reload-time"].value)
 			}, callback);
-			elements["damage-on-impact"].value = result[0];
-			elements["stk"].value = result[1];
-			elements["ttk"].value = result[2];
+			elements["time-to-impact"].value = result[0];
+			elements["damage-on-impact"].value = result[1];
+			elements["stk"].value = result[2];
+			elements["reloads-required"].value = result[3];
+			elements["ttk"].value = result[4];
 		});
 	};
 
