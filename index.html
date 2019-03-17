@@ -14,7 +14,9 @@
 			<h1>Game Agnostic TTK Calculator</h1>
 		</header>
 		<main>
-			<form>
+			<form id="form">
+				<input id="reset" type="reset" value="Reset">
+				<br>
 				<label for="health">Target health:</label>
 				<br>
 				<input id="health"
@@ -22,27 +24,6 @@
 						type="number"
 						min="0"
 						step="1"
-						required>
-				<br>
-				<label for="armor">Target armor:</label>
-				<br>
-				<input id="armor"
-						title="A positive integer. Damage gets subtracted from armor before getting subtracted from health."
-						type="number"
-						min="0"
-						step="1"
-						value="0"
-						required>
-				<br>
-				<label for="armor-protection">Armor protection factor:</label>
-				<br>
-				<input id="armor-protection"
-						title="A number from 0.0 to 1.0. Indicates the percent of damage that armor absorbs from each shot."
-						type="number"
-						min="0.0"
-						max="1.0"
-						step="0.00001"
-						value="1.0"
 						required>
 				<br>
 				<label for="damage">Damage per shot:</label>
@@ -69,45 +50,136 @@
 					<option value="mpr">Milliseconds per round</option>
 				</select>
 				<br>
-				<label for="accuracy">Accuracy:</label>
+				<label for="distance">Distance from target:</label>
 				<br>
-				<input id="accuracy"
-						title="A positive number greater than 0.0 and less or equal to than 1.0. Indicates how accurately the shooter fires the weapon. Setting this to a value less than 1.0 introduces RNG into the result."
-						type="number"
-						min="0.00001"
-						max="1.0"
-						step="0.00001"
-						value="1.0"
-						required>
-				<br>
-				<label for="ammo">Ammo count:</label>
-				<br>
-				<input id="ammo"
-						title="A positive integer. Indicates the number of rounds that can be fired before reloading."
-						type="number"
-						min="0"
-						step="1"
-						required>
-				<input id="infinite-ammo" type="checkbox" checked="0" defaultChecked="0">
-				<label for="infinite-ammo">Infinite ammo?</label>
-				<br>
-				<label for="reload">Reload time:</label>
-				<br>
-				<input id="reload"
-						title="A positive number. The time in seconds it takes to reload."
+				<input id="distance"
 						type="number"
 						min="0"
 						step="0.00001"
-						required>
+						value="0">
 				<br>
+				<fieldset>
+					<legend>
+						<input id="has-armor" type="checkbox">
+						<label for="has-armor">Target has armor?</label>
+					</legend>
+					<label for="armor">Target armor:</label>
+					<br>
+					<input id="armor"
+							title="A positive integer. Damage gets subtracted from armor before getting subtracted from health."
+							type="number"
+							min="0"
+							step="1"
+							value="0"
+							disabled>
+					<br>
+					<label for="armor-protection">Armor protection factor:</label>
+					<br>
+					<input id="armor-protection"
+							title="A number from 0.0 to 1.0. Indicates the percent of damage that armor absorbs from each shot."
+							type="number"
+							min="0.0"
+							max="1.0"
+							step="0.00001"
+							value="1.0"
+							disabled>
+				</fieldset>
+				<fieldset>
+					<legend>
+						<input id="projectile-based" type="checkbox">
+						<label for="projectile-based">Projectile-based weapon?</label>
+					</legend>
+					<label for="position">Initial projectile position:</label>
+					<br>
+					<input id="position"
+						type="number"
+						min="0"
+						step="0.00001"
+						value="0"
+						disabled>
+					<br>
+					<label for="speed">Initial projectile speed:</label>
+					<br>
+					<input id="speed"
+							type="number"
+							min="0.00001"
+							step="0.00001"
+							disabled>
+					<br>
+					<label for="acceleration">Projectile acceleration:</label>
+					<br>
+					<input id="acceleration"
+							type="number"
+							step="0.00001"
+							value="0"
+							disabled>
+				</fieldset>
+				<fieldset>
+					<legend>
+						<input id="has-falloff-damage" type="checkbox">
+						<label for="has-falloff-damage" title="Damage scales with distance.">Weapon has damage falloff?</label>
+					</legend>
+					<label for="falloff-damage">Final damage due to falloff:</label>
+					<br>
+					<input id="falloff-damage"
+							title="A positive integer. The damage dealt at distances greater than or equal to the ending falloff damage distance. If this number is less than the initial damage, then damage scales down with distance; otherwise damage scales up with distance."
+							type="number"
+							min="1.0"
+							step="1"
+							disabled>
+					<br>
+					<label for="falloff-begin">Beginning falloff damage distance:</label>
+					<br>
+					<input id="falloff-begin"
+							title="A positive number. Indicates the distance from the shooter before damage falloff begins."
+							type="number"
+							step="0.00001"
+							disabled>
+					<br>
+					<label for="falloff-end">Ending falloff damage distance:</label>
+					<br>
+					<input id="falloff-end"
+							title="A positive number. Indicates the distance from the shooter after damage falloff ends."
+							type="number"
+							step="0.00001"
+							disabled>
+				</fieldset>
+				<fieldset>
+					<legend>
+						<input id="uses-ammo" type="checkbox">
+						<label for="uses-ammo">Weapon uses ammo?</label>
+					</legend>
+					<label for="ammo-count">Ammo count:</label>
+					<br>
+					<input id="ammo-count"
+							title="A positive integer. Indicates the number of rounds that can be fired before reloading."
+							type="number"
+							min="0"
+							step="1"
+							disabled>
+					<br>
+					<label for="reload-time">Reload time:</label>
+					<br>
+					<input id="reload-time"
+							title="A positive number. The time in seconds it takes to reload."
+							type="number"
+							min="0"
+							step="0.00001"
+							disabled>
+					<br>
+				</fieldset>
 				<!-- TODO: Support burst fire weapons weapons and charge-up weapons -->
-				<input id="include-combat-table" type="checkbox">
-				<label for="include-combat-table">Include table output?</label>
+				<input style="display: none;" id="include-simulation-log" type="checkbox">
+				<label style="display: none;" for="include-simulation-log">Include simulation log?</label>
 				<br>
 				<input id="submit" type="submit" value="Calculate">
 			</form>
 			<fieldset>
 				<legend>Results</legend>
+				<label for="damage-on-impact"><b>Damage on impact:</b></label>
+				<br>
+				<input id="damage-on-impact" type="number" readonly>
+				<br>
 				<label for="stk"><b>Shots to Kill:</b></label>
 				<br>
 				<input id="stk" type="number" readonly>
@@ -116,7 +188,7 @@
 				<br>
 				<input id="ttk" type="number" readonly>
 				<br>
-				<table id="combat-table"></table>
+				<ol id="simulation-log"></ol>
 			</fieldset>
 		</main>
 		<footer>

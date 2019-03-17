@@ -4,19 +4,14 @@
 	--background-color: #1c1c1c;
 	--selection-foreground-color: Black;
 	--selection-background-color: LightSteelBlue;
-	--input-border-color: SteelBlue;
-	--input-border-color-hover-focus: #d78700;
-	--input-foreground-color: White;
-	--input-background-color: #1c1c1c;
-	--button-border-color: SteelBlue;
-	--button-border-color-hover-focus: #d78700;
-	--button-border-color-active: #005f00;
-	--button-foreground-color: White;
-	--button-background-color: #1c1c1c;
 	--link-color: SteelBlue;
 	--link-color-hover-focus: #d78700;
-	--link-color-active: #005f00;
-	--disabled-border-color: Black;
+	--link-color-active: Purple;
+	--input-border-color: SteelBlue;
+	--input-border-color-invalid: #5f0000;
+	--input-border-color-hover-focus: #d78700;
+	--input-border-color-active: Purple;
+	--input-border-color-disabled: Black;
 }
 ::selection {
 	color: var(--selection-foreground-color);
@@ -27,7 +22,7 @@ body {
 	font-family: var(--font-family);
 	color: var(--foreground-color);
 	background-color: var(--background-color);
-	line-height: 2.0;
+	line-height: 1.5;
 }
 a {
 	color: var(--link-color);
@@ -49,12 +44,30 @@ th,td {
 	border: thin solid;
 	padding: 0.5em;
 }
+label {
+	margin: 0;
+	padding: 0;
+}
+legend {
+	margin: 0;
+	padding: 0 0.5em;
+}
+fieldset {
+	margin: 0.25em 0;
+	border: thin solid;
+	padding: 1em;
+	max-width: 600px;
+}
 input,select {
 	margin: 0.25em 0;
 	border: thin solid;
 	border-color: var(--input-border-color);
-	color: var(--input-foreground-color);
-	background-color: var(--input-background-color);
+	padding: 0.25em;
+	color: var(--foreground-color);
+	background-color: var(--background-color);
+}
+input,input[type=button],input[type=submit],select,fieldset {
+	border-radius: 4px;
 }
 input[type=number] {
 	appearance: textfield;
@@ -68,32 +81,28 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=button],
 input[type=submit] {
 	padding: 0.5em;
-	color: var(--button-foreground-color);
-	background-color: var(--button-background-color);
+}
+input:invalid {
+	border-color: var(--input-border-color-invalid);
+	box-shadow: 0px 0px 4px #5f0000;
 }
 input:hover,
 input:focus,
 select:hover,
 select:focus {
-	border: thin solid;
 	border-color: var(--input-border-color-hover-focus);
+	box-shadow: 0px 0px 4px var(--input-border-color-hover-focus);
 }
-input[type=button]:hover,
-input[type=button]:focus,
-input[type=submit]:hover,
-input[type=submit]:focus {
-	border: thin solid;
-	border-color: var(--button-border-color-hover-focus);
-}
-input[type=button]:active,input[type=submit]:active {
-	border: thin solid;
-	border-color: var(--button-border-color-active);
+input:active,
+select:active {
+	border-color: var(--input-border-color-active);
+	box-shadow: 0px 0px 4px var(--input-border-color-active);
 }
 [disabled],[disabled]:hover,[disabled]:focus,[disabled]:active {
-	border: thin solid;
-	border-color: var(--disabled-border-color);
+	border-color: var(--input-border-color-disabled);
+	box-shadow: none;
 }
 [readonly],[readonly]:hover,[readonly]:focus,[readonly]:active {
-	border: thin solid;
 	border-color: var(--input-border-color);
+	box-shadow: none;
 }

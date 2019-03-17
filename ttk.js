@@ -1,196 +1,256 @@
 (function() {
-	function calculate_stk_and_ttk(health,
-									armor,
-									armor_protection,
-									damage,
-									rpm,
-									accuracy,
-									ammo_count,
-									reload_time,
-									infinite_ammo,
-									iter_cb)
+
+	var elements = {};
+	var checkbox_element_groups = {};
+
+	function calculate_stk_and_ttk(params, callback)
 	{
-		var seconds_per_round = 1.0 / (rpm/60.0);
-		var seconds_elapsed = 0.0;
+		var health = params["health"];
+
+		var distance = params["distance"];
+
+		var damage = params["damage"];
+		if (params["has-falloff-damage"]) {
+			if (distance >= params["falloff-end"]) {
+				damage = Math.trunc(params["falloff-damage"]);
+			} else if (distance >= params["falloff-begin"]) {
+				damage -=
+					Math.trunc((damage - params["falloff-damage"]) /
+					(params["falloff-end"] - params["falloff-begin"]) *
+					(distance - params["falloff-begin"]));
+			}
+		}
+
+		var ms_per_round = 0;
+		if (params["rate-unit"] == "rpm") {
+			ms_per_round = Math.trunc(1.0 / params["rate"] * 60.0 * 1000.0);
+		} else if (params["rate-unit"] == "rps") {
+			ms_per_round = Math.trunc(1.0 / params["rate"] * 1000.0);
+		} else if (params["rate-unit"] == "spr") {
+			ms_per_round = Math.trunc(params["rate"] * 1000.0);
+		} else if (params["rate-unit"] == "mpr") {
+			ms_per_round = Math.trunc(params["rate"]);
+		}
+
+		var armor = 0;
+		var armor_protection = 1.0;
+		if (params["has-armor"]) {
+			armor = params["armor"];
+			armor_protection = params["armor-protection"];
+		}
+
+		var projectile_queue = [];
+		var projectile_based = params["projectile-based"];
+		var position = 0.0;
+		var speed = Infinity;
+		var acceleration = 0.0;
+		if (projectile_based) {
+			position = params["position"];
+			speed = params["speed"];
+			acceleration = params["acceleration"];
+			console.log("position: " + position);
+			console.log("speed: " + speed);
+			console.log("accel: " + acceleration);
+		}
+
+		var max_ammo = 0;
+		var reload_time = 0;
+		var uses_ammo = params["uses-ammo"];
+		if (uses_ammo) {
+			max_ammo = params["ammo-count"];
+			reload_time = Math.trunc(params["reload-time"] * 1000.0);
+		}
+		var ammo = max_ammo;
+		
+		var weapon_status = "ready";
+		var weapon_refire_completion_time = 0;
+		var weapon_reload_completion_time = 0;
 		var rounds_fired = 0;
-		var ammo_remaining = ammo_count;
-		if (health > 0) {
-			while (true) {
-				var hit_or_miss = "miss";
-				if (Math.random() >= (1.0 - accuracy)) {
-					hit_or_miss = "hit";
-					var armor_damage = Math.ceil(damage * armor_protection);
-					if (armor_damage > armor) {
-						armor_damage = armor;
-					}
-					armor -= armor_damage;
-					var health_damage = damage - armor_damage;
-					if (health_damage > health) {
-						health_damage = health;
-					}
-					health -= health_damage;
+		var rounds_hit = 0;
+		var ms = 0;
+		
+	
+		function fire_weapon()
+		{
+			var projectile = {
+				"number": rounds_fired + 1,
+				"time": ms,
+				"position": position,
+				"speed": speed,
+				"acceleration": acceleration
+			};
+			projectile_queue.push(projectile);
+			++rounds_fired;
+			if (uses_ammo) {
+				--ammo;
+			}
+			if (uses_ammo && ammo == 0) {
+					weapon_status = "reloading";
+					weapon_reload_completion_time = ms + reload_time;
+			} else {
+				weapon_status = "refiring";
+				weapon_refire_completion_time = ms + ms_per_round;
+			}
+		}
+
+		function update_weapon_status()
+		{
+			if (weapon_status == "reloading" && ms >= weapon_reload_completion_time) {
+				ammo = max_ammo;
+				weapon_status = "ready";
+			} else if (weapon_status == "refiring" && ms >= weapon_refire_completion_time) {
+				weapon_status = "ready";
+			}
+		}
+
+		function deal_damage()
+		{
+			++rounds_hit;
+			var armor_damage = Math.ceil(damage * armor_protection);
+			if (armor_damage > armor) {
+				armor_damage = armor;
+			}
+			armor -= armor_damage;
+			var health_damage = damage - armor_damage;
+			if (health_damage > health) {
+				health_damage = health;
+			}
+			health -= health_damage;
+		}
+
+		function update_projectile_queue()
+		{
+			if (projectile_queue.length == 0) {
+				return;
+			}
+			projectile_queue.forEach(function(p) {
+				if (isFinite(p["speed"])) {
+					var delta_seconds = (ms - p["time"]) / 1000.0;
+					p["position"] += delta_seconds * p["speed"];
+					p["speed"] += delta_seconds * p["acceleration"];
+					p["time"] = ms;
 				}
-				++rounds_fired;
-				if (!infinite_ammo) {
-					--ammo_remaining;
-				}
-				if (iter_cb != null) {
-					iter_cb(rounds_fired, seconds_elapsed, hit_or_miss, ammo_remaining, infinite_ammo, health, armor);
-				}
-				if (health == 0.0) {
-					break;
+			});
+			while (projectile_queue.length > 0) {
+				var p = projectile_queue[0];
+				if (!isFinite(p["speed"]) || p["position"] >= distance) {
+					deal_damage();
+					projectile_queue.shift();
 				} else {
-					if (!infinite_ammo && ammo_remaining == 0) {
-						ammo_remaining = ammo_count;
-						seconds_elapsed += reload_time;
-					} else {
-						seconds_elapsed += seconds_per_round;
-					}
+					break;
 				}
 			}
 		}
-		return [ rounds_fired, seconds_elapsed ];
+
+		if (health > 0) {
+			while (true) {
+				if (weapon_status == "ready") {
+					fire_weapon();
+				}
+				update_projectile_queue();
+				if (health == 0) {
+					break;
+				} else {
+					ms += 1;
+					update_weapon_status();
+				}
+			}
+		}
+		return [ damage, rounds_hit, ms / 1000.0 ];
 	};
-	/*var reset_button = document.getElementById("reset");*/
-	var health_input = document.getElementById("health");
-	var armor_input = document.getElementById("armor");
-	var armor_protection_input = document.getElementById("armor-protection");
-	var damage_input = document.getElementById("damage");
-	var rate_input = document.getElementById("rate");
-	var rate_unit_input = document.getElementById("rate-unit");
-	var accuracy_input = document.getElementById("accuracy");
-	var ammo_input = document.getElementById("ammo");
-	var infinite_ammo_input = document.getElementById("infinite-ammo");
-	var reload_input = document.getElementById("reload");
-	var include_combat_table_input = document.getElementById("include-combat-table");
-	var form = document.querySelector("body>main>form");
-	var stk_output = document.getElementById("stk");
-	var ttk_output = document.getElementById("ttk");
-	var combat_table_output = document.getElementById("combat-table");
-	function calculation_iteration_callback(shots_fired, 
-											time_elapsed,
-											hit_or_miss,
-											ammo_remaining,
-											infinite_ammo,
-											health_remaining,
-											armor_remaining)
+
+	function update_disabled_for_checkbox_group(k)
 	{
-		var row = document.createElement("tr");
-		var c1 = document.createElement("td");
-		c1.appendChild(document.createTextNode(shots_fired));
-		var c2 = document.createElement("td");
-		c2.appendChild(document.createTextNode(time_elapsed.toFixed(6)));
-		var c3 = document.createElement("td");
-		c3.appendChild(document.createTextNode(hit_or_miss));
-		var c4 = document.createElement("td");
-		if (infinite_ammo) {
-			c4.appendChild(document.createTextNode("-"));
-		} else {
-			c4.appendChild(document.createTextNode(ammo_remaining));
-		}
-		var c5 = document.createElement("td");
-		c5.appendChild(document.createTextNode(health_remaining));
-		var c6 = document.createElement("td");
-		c6.appendChild(document.createTextNode(armor_remaining));
-		row.appendChild(c1);
-		row.appendChild(c2);
-		row.appendChild(c3);
-		row.appendChild(c4);
-		row.appendChild(c5);
-		row.appendChild(c6);
-		combat_table_output.appendChild(row);
+		var checked = Boolean(elements[k].checked);
+		checkbox_element_groups[k].forEach(function(e) {
+			elements[e].disabled = !checked;
+			elements[e].required = checked;
+		});
 	};
-	/*
-	reset.addEventListener("click", function() {
-		health_input.value = "";
-		armor_input.value = "0";
-		armor_protection_input.value = "0.66";
-		damage_input.value = "";
-		rpm_input.value = "";
-	});
-	*/
-	function apply_infinite_ammo_value()
+
+	function initialize()
 	{
-		if (infinite_ammo_input.checked) {
-			ammo_input.disabled = reload_input.disabled = true;
-			ammo_input.required = reload_input.required = false;
-			ammo_input.value = reload_input.value = "";
-		} else {
-			ammo_input.disabled = reload_input.disabled = false;
-			ammo_input.required = reload_input.required = true;
-		}
-	}
-	apply_infinite_ammo_value();
-	infinite_ammo_input.addEventListener("change", function() {
-		apply_infinite_ammo_value();
-	});
-	form.addEventListener("submit", function(e) {
-		e.preventDefault();
-		while (combat_table_output.childElementCount > 0) {
-			combat_table_output.removeChild(combat_table_output.lastChild);
-		}
-		if (include_combat_table_input.checked) {
-			var first_row = document.createElement("tr");
-			var c1 = document.createElement("th");
-			c1.appendChild(document.createTextNode("Shots fired"));
-			var c2 = document.createElement("th");
-			c2.appendChild(document.createTextNode("Time elapsed"));
-			var c3 = document.createElement("th");
-			c3.appendChild(document.createTextNode("Hit or Miss"));
-			var c4 = document.createElement("th");
-			c4.appendChild(document.createTextNode("Ammo remaining"));
-			var c5 = document.createElement("th");
-			c5.appendChild(document.createTextNode("Health remaining"));
-			var c6 = document.createElement("th");
-			c6.appendChild(document.createTextNode("Armor remaining"));
-			first_row.appendChild(c1);
-			first_row.appendChild(c2);
-			first_row.appendChild(c3);
-			first_row.appendChild(c4);
-			first_row.appendChild(c5);
-			first_row.appendChild(c6);
-			combat_table_output.appendChild(first_row);
-		}
-		var health = Number(health_input.value);
-		var armor = Number(armor_input.value);
-		var armor_protection = Number(armor_protection_input.value);
-		var damage = Number(damage_input.value);
-		var rate = Number(rate_input.value);
-		var rate_unit = rate_unit_input.value;
-		var rpm = 0.0;
-		if (rate_unit == "rpm") {
-			rpm = rate;
-		} else if (rate_unit == "rps") {
-			rpm = rate * 60.0;
-		} else if (rate_unit == "spr") {
-			rpm = 1.0 / rate * 60.0;
-		} else if (rate_unit == "mpr") {
-			rpm = 1000.0 / rate * 60.0;
-		}
-		var accuracy = Number(accuracy_input.value);
-		var infinite_ammo = Boolean(infinite_ammo_input.checked);
-		var ammo = 0;
-		var reload = 0.0;
-		if (!infinite_ammo) {
-			ammo = Number(ammo_input.value);
-			reload = Number(reload_input.value);
-		}
-		var include_combat_table = include_combat_table_input.checked;
-		var calc_cb = null;
-		if (include_combat_table) {
-			calc_cb = calculation_iteration_callback;
-		}
-		var result = calculate_stk_and_ttk(health,
-									armor,
-									armor_protection,
-									damage,
-									rpm,
-									accuracy,
-									ammo,
-									reload,
-									infinite_ammo,
-									calc_cb);
-		stk_output.value = result[0].toFixed(6);
-		ttk_output.value = result[1].toFixed(6);
-	});
+		[
+			"form",
+			"reset",
+			"health",
+			"damage",
+			"rate",
+			"rate-unit",
+			"has-armor",
+			"armor",
+			"armor-protection",
+			"projectile-based",
+			"distance",
+			"position",
+			"speed",
+			"acceleration",
+			"has-falloff-damage",
+			"falloff-damage",
+			"falloff-begin",
+			"falloff-end",
+			"uses-ammo",
+			"ammo-count",
+			"reload-time",
+			"include-simulation-log",
+			"submit",
+			"damage-on-impact",
+			"stk",
+			"ttk",
+			"simulation-log"
+		].forEach(function(x) {
+			elements[x] = document.getElementById(x);
+		});
+		checkbox_element_groups = {
+			"has-armor": [ "armor", "armor-protection" ],
+			"projectile-based": [ "position", "speed", "acceleration" ],
+			"has-falloff-damage": [ "falloff-damage", "falloff-begin", "falloff-end" ],
+			"uses-ammo": [ "ammo-count", "reload-time" ]
+		};
+		Object.keys(checkbox_element_groups).forEach(function(k) {
+			update_disabled_for_checkbox_group(k);
+			elements[k].addEventListener("input", function() {
+				update_disabled_for_checkbox_group(k);
+			});
+		});
+		elements["form"].addEventListener("reset", function() {
+			Object.keys(checkbox_element_groups).forEach(function(k) {
+				elements[k].checked = false;
+				update_disabled_for_checkbox_group(k);
+			});
+		});
+		elements["form"].addEventListener("submit", function(e) {
+			e.preventDefault();
+			var callback = null;
+			if (elements["include-simulation-log"].checked) {
+				callback = ttk_progress;
+			}
+			var result = calculate_stk_and_ttk({
+				"health": Number(elements["health"].value),
+				"damage": Number(elements["damage"].value),
+				"rate": Number(elements["rate"].value),
+				"rate-unit": String(elements["rate-unit"].value),
+				"distance": Number(elements["distance"].value),
+				"has-armor": Boolean(elements["has-armor"].checked),
+				"armor": Number(elements["armor"].value),
+				"armor-protection": Number(elements["armor-protection"].value),
+				"projectile-based": Boolean(elements["projectile-based"].checked),
+				"position": Number(elements["position"].value),
+				"speed": Number(elements["speed"].value),
+				"acceleration": Number(elements["acceleration"].value),
+				"has-falloff-damage": Boolean(elements["has-falloff-damage"].checked),
+				"falloff-damage": Number(elements["falloff-damage"].value),
+				"falloff-begin": Number(elements["falloff-begin"].value),
+				"falloff-end": Number(elements["falloff-end"].value),
+				"uses-ammo": Boolean(elements["uses-ammo"].checked),
+				"ammo-count": Number(elements["ammo-count"].value),
+				"reload-time": Number(elements["reload-time"].value)
+			}, callback);
+			elements["damage-on-impact"].value = result[0];
+			elements["stk"].value = result[1];
+			elements["ttk"].value = result[2];
+		});
+	};
+
+	initialize();
 })();
