@@ -56,9 +56,9 @@
 		} else {
 			seconds_per_round = params["rate"];
 		}
-		var time_to_kill = shots_to_kill*time_to_impact +
-			(shots_to_kill-1-reload_count)*seconds_per_round +
-			reload_count*reload_time;
+		var time_firing = (shots_to_kill-1-reload_count) * seconds_per_round;
+		var time_reloading = reload_count * reload_time;
+		var time_to_kill = time_to_impact + time_firing + time_reloading;
 		return [ time_to_impact, damage_on_impact, shots_to_kill, reload_count,
 			time_to_kill ];
 	};
