@@ -49,7 +49,14 @@
 			speed = params["speed"];
 			acceleration = params["acceleration"];
 		}
-		var time_to_impact = Number(Number(distance / speed).toFixed(3));
+		var time_to_impact = 0;
+		if (acceleration == 0) {
+			time_to_impact = Number(Number(distance / speed).toFixed(6));
+		} else {
+			time_to_impact = Number(Number(
+				-(speed/acceleration)+Math.sqrt(Math.pow(speed, 2)/Math.pow(acceleration, 2)+(2*distance)/acceleration)
+			).toFixed(4));
+		}
 
 		var max_ammo = 0;
 		var reload_time = 0;
