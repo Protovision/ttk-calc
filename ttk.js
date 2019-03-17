@@ -58,7 +58,7 @@
 		var uses_ammo = params["uses-ammo"];
 		if (uses_ammo) {
 			max_ammo = params["ammo-count"];
-			reload_time = Math.trunc(params["reload-time"] * 1000.0);
+			reload_time = params["reload-time"];
 		}
 		var ammo = max_ammo;
 		
@@ -86,7 +86,9 @@
 			}
 			if (uses_ammo && ammo == 0) {
 					weapon_status = "reloading";
-					weapon_reload_completion_time = ms + reload_time;
+					weapon_reload_completion_time = ms + reload_time * 1000;
+					console.log(ms);
+					console.log(weapon_reload_completion_time);
 			} else {
 				weapon_status = "refiring";
 				weapon_refire_completion_time = ms + ms_per_round;

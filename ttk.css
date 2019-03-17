@@ -101,6 +101,7 @@ select:active {
 [disabled],[disabled]:hover,[disabled]:focus,[disabled]:active {
 	border-color: var(--input-border-color-disabled);
 	box-shadow: none;
+	color: var(--input-border-color-disabled);
 }
 [readonly],[readonly]:hover,[readonly]:focus,[readonly]:active {
 	border-color: var(--input-border-color);
