@@ -3,169 +3,64 @@
 	var elements = {};
 	var checkbox_element_groups = {};
 
-	function calculate_stk_and_ttk(params, callback)
+	function calculate_ttk(params)
 	{
-		var health = params["health"];
-
-		var distance = params["distance"];
-
-		var damage = params["damage"];
-		if (params["has-falloff-damage"]) {
-			if (distance >= params["falloff-end"]) {
-				damage = Math.trunc(params["falloff-damage"]);
-			} else if (distance >= params["falloff-begin"]) {
-				damage -=
-					Math.trunc((damage - params["falloff-damage"]) /
-					(params["falloff-end"] - params["falloff-begin"]) *
-					(distance - params["falloff-begin"]));
-			}
-		}
-	
-		var ms_per_round = 0;
-		if (params["rate-unit"] == "rpm") {
-			ms_per_round = Math.trunc(1.0 / params["rate"] * 60.0 * 1000.0);
-		} else if (params["rate-unit"] == "rps") {
-			ms_per_round = Math.trunc(1.0 / params["rate"] * 1000.0);
-		} else if (params["rate-unit"] == "spr") {
-			ms_per_round = Math.trunc(params["rate"] * 1000.0);
-		} else if (params["rate-unit"] == "mpr") {
-			ms_per_round = Math.trunc(params["rate"]);
-		}
-
-		var armor = 0;
-		var armor_protection = 1.0;
+		var effective_health = params["health"];
 		if (params["has-armor"]) {
-			armor = params["armor"];
-			armor_protection = params["armor-protection"];
+			effective_health += Math.ceil(params["armor"] *
+				params["armor-protection"]);
 		}
-
-		var projectile_queue = [];
-		var projectile_based = params["projectile-based"];
-		var position = 0.0;
-		var speed = Infinity;
-		var acceleration = 0.0;
-		if (projectile_based) {
-			position = params["position"];
-			speed = params["speed"];
-			acceleration = params["acceleration"];
-		}
-		var time_to_impact = 0;
-		if (acceleration == 0) {
-			time_to_impact = Number(Number(distance / speed).toFixed(6));
-		} else {
-			time_to_impact = Number(Number(
-				-(speed/acceleration)+Math.sqrt(Math.pow(speed, 2)/Math.pow(acceleration, 2)+(2*distance)/acceleration)
-			).toFixed(4));
-		}
-
-		var max_ammo = 0;
-		var reload_time = 0;
-		var reload_count = 0;
-		var uses_ammo = params["uses-ammo"];
-		if (uses_ammo) {
-			max_ammo = params["ammo-count"];
-			reload_time = params["reload-time"];
-		}
-		var ammo = max_ammo;
-		
-		var weapon_status = "ready";
-		var weapon_refire_completion_time = 0;
-		var weapon_reload_completion_time = 0;
-		var rounds_fired = 0;
-		var rounds_hit = 0;
-		var ms = 0;
-		
-	
-		function fire_weapon()
-		{
-			var projectile = {
-				"number": rounds_fired + 1,
-				"time": ms,
-				"position": position,
-				"speed": speed,
-				"acceleration": acceleration
-			};
-			projectile_queue.push(projectile);
-			++rounds_fired;
-			if (uses_ammo) {
-				--ammo;
-			}
-			if (uses_ammo && ammo == 0) {
-					weapon_status = "reloading";
-					weapon_reload_completion_time = ms + reload_time * 1000;
-					console.log(ms);
-					console.log(weapon_reload_completion_time);
+		var distance = params["distance"];
+		var time_to_impact = 0.0;
+		if (params["projectile-based"]) {
+			var speed = params["speed"];
+			var acceleration = params["acceleration"];
+			if (acceleration == 0.0) {
+				time_to_impact = distance / speed;
 			} else {
-				weapon_status = "refiring";
-				weapon_refire_completion_time = ms + ms_per_round;
+				time_to_impact = -(speed/acceleration) +
+					Math.sqrt(Math.pow(speed,2)/Math.pow(acceleration,2)+
+					(2*distance)/acceleration);
 			}
 		}
-
-		function update_weapon_status()
-		{
-			if (weapon_status == "reloading" && ms >= weapon_reload_completion_time) {
-				ammo = max_ammo;
-				++reload_count;
-				weapon_status = "ready";
-			} else if (weapon_status == "refiring" && ms >= weapon_refire_completion_time) {
-				weapon_status = "ready";
+		var damage_on_impact = params["damage"];
+		if (params["has-falloff-damage"]) {
+			var min_falloff_distance = params["falloff-begin"];
+			var max_falloff_distance = params["falloff-end"];
+			var min_damage = params["falloff-damage"];
+			var max_damage = params["damage"];
+			if (distance >= max_falloff_distance) {
+				damage_on_impact = min_damage;
+			} else if (distance >= min_falloff_distance) {
+				damage_on_impact = Math.trunc(max_damage - 
+					(max_damage-min_damage)/
+					(max_falloff_distance-min_falloff_distance)*
+					(distance-min_falloff_distance));
 			}
 		}
-
-		function deal_damage()
-		{
-			++rounds_hit;
-			var armor_damage = Math.ceil(damage * armor_protection);
-			if (armor_damage > armor) {
-				armor_damage = armor;
-			}
-			armor -= armor_damage;
-			var health_damage = damage - armor_damage;
-			if (health_damage > health) {
-				health_damage = health;
-			}
-			health -= health_damage;
+		var shots_to_kill = Math.ceil(effective_health / damage_on_impact);
+		var reload_count = 0;
+		var reload_time = 0.0;
+		if (params["uses-ammo"]) {
+			reload_count = Math.floor(effective_health /
+				(params["ammo-count"]*damage_on_impact));
+			reload_time = params["reload-time"];
+		};
+		var seconds_per_round = 0.0;
+		if (params["rate-unit"] == "rpm") {
+			seconds_per_round = 1.0 / params["rate"] * 60.0;
+		} else if (params["rate-unit"] == "rps") {
+			seconds_per_round = 1.0 / params["rate"];
+		} else if (params["rate-unit"] == "mpr") {
+			seconds_per_round = params["rate"] / 1000.0;
+		} else {
+			seconds_per_round = params["rate"];
 		}
-
-		function update_projectile_queue()
-		{
-			if (projectile_queue.length == 0) {
-				return;
-			}
-			projectile_queue.forEach(function(p) {
-				if (isFinite(p["speed"])) {
-					var delta_seconds = (ms - p["time"]) / 1000.0;
-					p["position"] += delta_seconds * p["speed"];
-					p["speed"] += delta_seconds * p["acceleration"];
-					p["time"] = ms;
-				}
-			});
-			while (projectile_queue.length > 0) {
-				var p = projectile_queue[0];
-				if (!isFinite(p["speed"]) || p["position"] >= distance) {
-					deal_damage();
-					projectile_queue.shift();
-				} else {
-					break;
-				}
-			}
-		}
-
-		if (health > 0) {
-			while (true) {
-				if (weapon_status == "ready") {
-					fire_weapon();
-				}
-				update_projectile_queue();
-				if (health == 0) {
-					break;
-				} else {
-					ms += 1;
-					update_weapon_status();
-				}
-			}
-		}
-		return [ time_to_impact, damage, rounds_hit, reload_count, ms / 1000.0 ];
+		var time_to_kill = shots_to_kill*time_to_impact +
+			(shots_to_kill-1-reload_count)*seconds_per_round +
+			reload_count*reload_time;
+		return [ time_to_impact, damage_on_impact, shots_to_kill, reload_count,
+			time_to_kill ];
 	};
 
 	function update_disabled_for_checkbox_group(k)
@@ -191,7 +86,6 @@
 			"armor-protection",
 			"projectile-based",
 			"distance",
-			"position",
 			"speed",
 			"acceleration",
 			"has-falloff-damage",
@@ -214,8 +108,9 @@
 		});
 		checkbox_element_groups = {
 			"has-armor": [ "armor", "armor-protection" ],
-			"projectile-based": [ "position", "speed", "acceleration" ],
-			"has-falloff-damage": [ "falloff-damage", "falloff-begin", "falloff-end" ],
+			"projectile-based": [ "speed", "acceleration" ],
+			"has-falloff-damage": [ "falloff-damage", "falloff-begin", 
+				"falloff-end" ],
 			"uses-ammo": [ "ammo-count", "reload-time" ]
 		};
 		Object.keys(checkbox_element_groups).forEach(function(k) {
@@ -232,11 +127,7 @@
 		});
 		elements["form"].addEventListener("submit", function(e) {
 			e.preventDefault();
-			var callback = null;
-			if (elements["include-simulation-log"].checked) {
-				callback = ttk_progress;
-			}
-			var result = calculate_stk_and_ttk({
+			var result = calculate_ttk({
 				"health": Number(elements["health"].value),
 				"damage": Number(elements["damage"].value),
 				"rate": Number(elements["rate"].value),
@@ -245,23 +136,24 @@
 				"has-armor": Boolean(elements["has-armor"].checked),
 				"armor": Number(elements["armor"].value),
 				"armor-protection": Number(elements["armor-protection"].value),
-				"projectile-based": Boolean(elements["projectile-based"].checked),
-				"position": Number(elements["position"].value),
+				"projectile-based":
+					Boolean(elements["projectile-based"].checked),
 				"speed": Number(elements["speed"].value),
 				"acceleration": Number(elements["acceleration"].value),
-				"has-falloff-damage": Boolean(elements["has-falloff-damage"].checked),
+				"has-falloff-damage":
+					Boolean(elements["has-falloff-damage"].checked),
 				"falloff-damage": Number(elements["falloff-damage"].value),
 				"falloff-begin": Number(elements["falloff-begin"].value),
 				"falloff-end": Number(elements["falloff-end"].value),
 				"uses-ammo": Boolean(elements["uses-ammo"].checked),
 				"ammo-count": Number(elements["ammo-count"].value),
 				"reload-time": Number(elements["reload-time"].value)
-			}, callback);
-			elements["time-to-impact"].value = result[0];
-			elements["damage-on-impact"].value = result[1];
-			elements["stk"].value = result[2];
-			elements["reloads-required"].value = result[3];
-			elements["ttk"].value = result[4];
+			});
+			elements["time-to-impact"].value = Number(result[0]).toFixed(6);
+			elements["damage-on-impact"].value = Number(result[1]).toFixed(6);
+			elements["stk"].value = Number(result[2]).toFixed(6);
+			elements["reloads-required"].value = Number(result[3]).toFixed(6);
+			elements["ttk"].value = Number(result[4]).toFixed(6);
 		});
 	};
 
