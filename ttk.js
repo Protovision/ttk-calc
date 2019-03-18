@@ -142,6 +142,9 @@
 			elements[k].addEventListener("input", function() {
 				update_disabled_for_checkbox_group(k);
 			});
+			elements[k].addEventListener("change", function() {
+				update_disabled_for_checkbox_group(k);
+			});
 		});
 		elements["form"].addEventListener("reset", function() {
 			Object.keys(checkbox_element_groups).forEach(function(k) {
