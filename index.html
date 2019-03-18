@@ -17,164 +17,169 @@
 			<form id="form">
 				<input id="reset" type="reset" value="Reset inputs">
 				<br>
-				<label for="target-health">Target health:</label>
-				<br>
-				<input
-					id="target-health"
-					title="A positive integer."
-					type="number"
-					min="0"
-					step="1"
-					required>
-				<br>
-				<label for="weapon-damage">Weapon damage:</label>
-				<br>
-				<input
-					id="weapon-damage"
-					title="A positive integer greater than 0."
-					type="number"
-					min="1"
-					step="1"
-					required>
-				<br>
-				<label for="weapon-rate-of-fire">Weapon rate of fire:</label>
-				<br>
-				<input
-					id="weapon-rate-of-fire"
-					title="A positive number greater than 0."
-					type="number"
-					min="0.00001"
-					step="0.00001"
-					required>
-				<select id="weapon-rate-of-fire-unit">
-					<option value="rpm">Rounds per minute</option>
-					<option value="rps">Rounds per second</option>
-					<option value="spr">Seconds per round</option>
-					<option value="mpr">Milliseconds per round</option>
-				</select>
-				<br>
-				<label for="target-distance">Target distance:</label>
-				<br>
-				<input
-					id="target-distance"
-					type="number"
-					min="0.00000"
-					step="0.00001"
-					value="0.00000">
-				<br>
-				<fieldset>
-					<legend>
-						<input id="target-has-armor" type="checkbox">
-						<label for="target-has-armor">Target has armor?</label>
-					</legend>
-					<label for="target-armor">Armor:</label>
-					<br>
-					<input 
-						id="target-armor"
-						title="A positive integer."
-						type="number"
-						min="0"
-						step="1"
-						value="0"
-						disabled>
-					<br>
-					<label for="target-armor-protection">Armor protection:</label>
-					<br>
-					<input id="target-armor-protection"
-							title="A number from 0.0 to 1.0."
+				<div class="fieldset-container">
+					<fieldset>
+						<legend>Required</legend>
+						<label for="target-health">Target health:</label>
+						<br>
+						<input
+							id="target-health"
+							title="A positive integer."
+							type="number"
+							min="0"
+							step="1"
+							required>
+						<br>
+						<label for="weapon-damage">Weapon damage:</label>
+						<br>
+						<input
+							id="weapon-damage"
+							title="A positive integer greater than 0."
+							type="number"
+							min="1"
+							step="1"
+							required>
+						<br>
+						<label for="weapon-rate-of-fire">Weapon rate of fire:</label>
+						<br>
+						<input
+							id="weapon-rate-of-fire"
+							title="A positive number greater than 0."
+							type="number"
+							min="0.00001"
+							step="0.00001"
+							required>
+						<select id="weapon-rate-of-fire-unit">
+							<option value="rpm">Rounds per minute</option>
+							<option value="rps">Rounds per second</option>
+							<option value="spr">Seconds per round</option>
+							<option value="mpr">Milliseconds per round</option>
+						</select>
+						<br>
+						<label for="target-distance">Target distance:</label>
+						<br>
+						<input
+							id="target-distance"
 							type="number"
 							min="0.00000"
-							max="1.00000"
 							step="0.00001"
-							value="1.00000"
+							value="0.00000">
+					</fieldset>
+					<fieldset>
+						<legend>
+							<input id="target-has-armor" type="checkbox">
+							<label for="target-has-armor">Target has armor?</label>
+						</legend>
+						<label for="target-armor">Armor:</label>
+						<br>
+						<input 
+							id="target-armor"
+							title="A positive integer."
+							type="number"
+							min="0"
+							step="1"
+							value="0"
 							disabled>
-				</fieldset>
-				<fieldset>
-					<legend>
-						<input id="weapon-is-projectile-based" type="checkbox">
-						<label for="weapon-is-projectile-based">Weapon is projectile-based?</label>
-					</legend>
-					<label for="weapon-projectile-speed">Projectile speed:</label>
-					<br>
-					<input 
-						id="weapon-projectile-speed"
-						type="number"
-						min="0.00001"
-						step="0.00001"
-						disabled>
-					<br>
-					<label for="weapon-projectile-acceleration">Projectile acceleration:</label>
-					<br>
-					<input
-						id="weapon-projectile-acceleration"
-						type="number"
-						min="0.00000"
-						step="0.00001"
-						value="0.00000"
-						disabled>
-				</fieldset>
-				<fieldset>
-					<legend>
-						<input id="weapon-has-damage-falloff" type="checkbox">
-						<label for="weapon-has-damage-falloff">Weapon has damage falloff?</label>
-					</legend>
-					<label for="weapon-min-falloff-distance">Minimum falloff distance:</label>
-					<br>
-					<input
-						id="weapon-min-falloff-distance"
-						title="A positive number."
-						type="number"
-						min="0.00000"
-						step="0.00001"
-						disabled>
-					<br>
-					<label for="weapon-max-falloff-distance">Maximum falloff distance:</label>
-					<br>
-					<input
-						id="weapon-max-falloff-distance"
-						title="A positive number."
-						type="number"
-						min="0.00000"
-						step="0.00001"
-						disabled>
-					<br>
-					<label for="min-max-weapon-damage">Minimum/maximum weapon damage:</label>
-					<br>
-					<input
-						id="weapon-min-max-damage"
-						title="A positive integer greater than 0."
-						type="number"
-						min="1"
-						step="1"
-						disabled>
-					<br>
-				</fieldset>
-				<fieldset>
-					<legend>
-						<input id="weapon-uses-ammo" type="checkbox">
-						<label for="weapon-uses-ammo">Weapon uses ammo?</label>
-					</legend>
-					<label for="weapon-ammo-capacity">Ammo capacity:</label>
-					<br>
-					<input
-						id="weapon-ammo-capacity"
-						title="A positive integer."
-						type="number"
-						min="1"
-						step="1"
-						disabled>
-					<br>
-					<label for="weapon-reload-time">Reload time:</label>
-					<br>
-					<input
-						id="weapon-reload-time"
-						title="A positive number."
-						type="number"
-						min="0.00000"
-						step="0.00001"
-						disabled>
-					<br>
-				</fieldset>
+						<br>
+						<label for="target-armor-protection">Armor protection:</label>
+						<br>
+						<input id="target-armor-protection"
+								title="A number from 0.0 to 1.0."
+								type="number"
+								min="0.00000"
+								max="1.00000"
+								step="0.00001"
+								value="1.00000"
+								disabled>
+					</fieldset>
+					<fieldset>
+						<legend>
+							<input id="weapon-is-projectile-based" type="checkbox">
+							<label for="weapon-is-projectile-based">Weapon is projectile-based?</label>
+						</legend>
+						<label for="weapon-projectile-speed">Projectile speed:</label>
+						<br>
+						<input 
+							id="weapon-projectile-speed"
+							type="number"
+							min="0.00001"
+							step="0.00001"
+							disabled>
+						<br>
+						<label for="weapon-projectile-acceleration">Projectile acceleration:</label>
+						<br>
+						<input
+							id="weapon-projectile-acceleration"
+							type="number"
+							min="0.00000"
+							step="0.00001"
+							value="0.00000"
+							disabled>
+					</fieldset>
+					<fieldset>
+						<legend>
+							<input id="weapon-has-damage-falloff" type="checkbox">
+							<label for="weapon-has-damage-falloff">Weapon has damage falloff?</label>
+						</legend>
+						<label for="weapon-min-falloff-distance">Minimum falloff distance:</label>
+						<br>
+						<input
+							id="weapon-min-falloff-distance"
+							title="A positive number."
+							type="number"
+							min="0.00000"
+							step="0.00001"
+							disabled>
+						<br>
+						<label for="weapon-max-falloff-distance">Maximum falloff distance:</label>
+						<br>
+						<input
+							id="weapon-max-falloff-distance"
+							title="A positive number."
+							type="number"
+							min="0.00000"
+							step="0.00001"
+							disabled>
+						<br>
+						<label for="min-max-weapon-damage">Minimum/maximum weapon damage:</label>
+						<br>
+						<input
+							id="weapon-min-max-damage"
+							title="A positive integer greater than 0."
+							type="number"
+							min="1"
+							step="1"
+							disabled>
+						<br>
+					</fieldset>
+					<fieldset>
+						<legend>
+							<input id="weapon-uses-ammo" type="checkbox">
+							<label for="weapon-uses-ammo">Weapon uses ammo?</label>
+						</legend>
+						<label for="weapon-ammo-capacity">Ammo capacity:</label>
+						<br>
+						<input
+							id="weapon-ammo-capacity"
+							title="A positive integer."
+							type="number"
+							min="1"
+							step="1"
+							disabled>
+						<br>
+						<label for="weapon-reload-time">Reload time:</label>
+						<br>
+						<input
+							id="weapon-reload-time"
+							title="A positive number."
+							type="number"
+							min="0.00000"
+							step="0.00001"
+							disabled>
+						<br>
+					</fieldset>
+				</div>
+				<br>
 				<input id="submit" type="submit" value="Calculate results">
 			</form>
 			<fieldset>

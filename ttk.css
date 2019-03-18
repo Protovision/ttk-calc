@@ -53,7 +53,8 @@ legend {
 	padding: 0 0.5em;
 }
 fieldset {
-	margin: 0.25em 0;
+	display: inline-block;
+	margin: 0.25em;
 	border: thin solid;
 	padding: 1em;
 	max-width: 600px;
@@ -106,4 +107,10 @@ select:active {
 [readonly],[readonly]:hover,[readonly]:focus,[readonly]:active {
 	border-color: var(--input-border-color);
 	box-shadow: none;
+}
+.fieldset-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: stretch;
 }
