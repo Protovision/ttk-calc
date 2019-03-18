@@ -50,7 +50,7 @@ label {
 }
 legend {
 	margin: 0;
-	padding: 0 0.5em;
+	padding: 0 0.25em;
 }
 fieldset {
 	display: inline-block;
@@ -79,6 +79,7 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
 	-webkit-appearance: none;
 }
+input[type=reset],
 input[type=button],
 input[type=submit] {
 	padding: 0.5em;
@@ -109,6 +110,7 @@ select:active {
 	box-shadow: none;
 }
 .fieldset-container {
+	margin: 0.25em 0;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: flex-start;
