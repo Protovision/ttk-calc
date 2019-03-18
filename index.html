@@ -15,184 +15,199 @@
 		</header>
 		<main>
 			<form id="form">
-				<input id="reset" type="reset" value="Reset">
+				<input id="reset" type="reset" value="Reset inputs">
 				<br>
-				<label for="health">Target health:</label>
+				<label for="target-health">Target health:</label>
 				<br>
-				<input id="health"
-						title="A positive integer."
-						type="number"
-						min="0"
-						step="1"
-						required>
+				<input
+					id="target-health"
+					title="A positive integer."
+					type="number"
+					min="0"
+					step="1"
+					required>
 				<br>
-				<label for="damage">Damage per shot:</label>
+				<label for="weapon-damage">Weapon damage:</label>
 				<br>
-				<input id="damage"
-						title="A positive integer greater than 0."
-						type="number"
-						min="1.0"
-						step="1"
-						required>
+				<input
+					id="weapon-damage"
+					title="A positive integer greater than 0."
+					type="number"
+					min="1"
+					step="1"
+					required>
 				<br>
-				<label for="rate">Firing rate:</label>
+				<label for="weapon-rate-of-fire">Weapon rate of fire:</label>
 				<br>
-				<input id="rate"
-						title="A positive number greater than 0. Indicates the time between each round fired."
-						type="number"
-						min="0.00001"
-						step="0.00001"
-						required>
-				<select id="rate-unit">
+				<input
+					id="weapon-rate-of-fire"
+					title="A positive number greater than 0."
+					type="number"
+					min="0.00001"
+					step="0.00001"
+					required>
+				<select id="weapon-rate-of-fire-unit">
 					<option value="rpm">Rounds per minute</option>
 					<option value="rps">Rounds per second</option>
 					<option value="spr">Seconds per round</option>
 					<option value="mpr">Milliseconds per round</option>
 				</select>
 				<br>
-				<label for="distance">Distance from target:</label>
+				<label for="target-distance">Target distance:</label>
 				<br>
-				<input id="distance"
+				<input
+					id="target-distance"
+					type="number"
+					min="0.00000"
+					step="0.00001"
+					value="0.00000">
+				<br>
+				<fieldset>
+					<legend>
+						<input id="target-has-armor" type="checkbox">
+						<label for="target-has-armor">Target has armor?</label>
+					</legend>
+					<label for="target-armor">Armor:</label>
+					<br>
+					<input 
+						id="target-armor"
+						title="A positive integer."
 						type="number"
 						min="0"
+						step="1"
+						value="0"
+						disabled>
+					<br>
+					<label for="target-armor-protection">Armor protection:</label>
+					<br>
+					<input id="target-armor-protection"
+							title="A number from 0.0 to 1.0."
+							type="number"
+							min="0.00000"
+							max="1.00000"
+							step="0.00001"
+							value="1.00000"
+							disabled>
+				</fieldset>
+				<fieldset>
+					<legend>
+						<input id="weapon-is-projectile-based" type="checkbox">
+						<label for="weapon-is-projectile-based">Weapon is projectile-based?</label>
+					</legend>
+					<label for="weapon-projectile-speed">Projectile speed:</label>
+					<br>
+					<input 
+						id="weapon-projectile-speed"
+						type="number"
+						min="0.00001"
 						step="0.00001"
-						value="0">
-				<br>
-				<fieldset>
-					<legend>
-						<input id="has-armor" type="checkbox">
-						<label for="has-armor">Target has armor?</label>
-					</legend>
-					<label for="armor">Target armor:</label>
+						disabled>
 					<br>
-					<input id="armor"
-							title="A positive integer. Damage gets subtracted from armor before getting subtracted from health."
-							type="number"
-							min="0"
-							step="1"
-							value="0"
-							disabled>
+					<label for="weapon-projectile-acceleration">Projectile acceleration:</label>
 					<br>
-					<label for="armor-protection">Armor protection factor:</label>
-					<br>
-					<input id="armor-protection"
-							title="A number from 0.0 to 1.0. Indicates the percent of damage that armor absorbs from each shot."
-							type="number"
-							min="0.0"
-							max="1.0"
-							step="0.00001"
-							value="1.0"
-							disabled>
+					<input
+						id="weapon-projectile-acceleration"
+						type="number"
+						min="0.00000"
+						step="0.00001"
+						value="0.00000"
+						disabled>
 				</fieldset>
 				<fieldset>
 					<legend>
-						<input id="projectile-based" type="checkbox">
-						<label for="projectile-based">Projectile-based weapon?</label>
+						<input id="weapon-has-damage-falloff" type="checkbox">
+						<label for="weapon-has-damage-falloff">Weapon has damage falloff?</label>
 					</legend>
-					<label for="speed">Initial projectile speed:</label>
+					<label for="weapon-min-falloff-distance">Minimum falloff distance:</label>
 					<br>
-					<input id="speed"
-							type="number"
-							min="0.00001"
-							step="0.00001"
-							disabled>
+					<input
+						id="weapon-min-falloff-distance"
+						title="A positive number."
+						type="number"
+						min="0.00000"
+						step="0.00001"
+						disabled>
 					<br>
-					<label for="acceleration">Projectile acceleration:</label>
+					<label for="weapon-max-falloff-distance">Maximum falloff distance:</label>
 					<br>
-					<input id="acceleration"
-							type="number"
-							step="0.00001"
-							value="0"
-							disabled>
+					<input
+						id="weapon-max-falloff-distance"
+						title="A positive number."
+						type="number"
+						min="0.00000"
+						step="0.00001"
+						disabled>
+					<br>
+					<label for="min-max-weapon-damage">Minimum/maximum weapon damage:</label>
+					<br>
+					<input
+						id="weapon-min-max-damage"
+						title="A positive integer greater than 0."
+						type="number"
+						min="1"
+						step="1"
+						disabled>
+					<br>
 				</fieldset>
 				<fieldset>
 					<legend>
-						<input id="has-falloff-damage" type="checkbox">
-						<label for="has-falloff-damage" title="Damage scales with distance.">Weapon has damage falloff?</label>
+						<input id="weapon-uses-ammo" type="checkbox">
+						<label for="weapon-uses-ammo">Weapon uses ammo?</label>
 					</legend>
-					<label for="falloff-damage">Final damage due to falloff:</label>
+					<label for="weapon-ammo-capacity">Ammo capacity:</label>
 					<br>
-					<input id="falloff-damage"
-							title="A positive integer. The damage dealt at distances greater than or equal to the ending falloff damage distance. If this number is less than the initial damage, then damage scales down with distance; otherwise damage scales up with distance."
-							type="number"
-							min="1.0"
-							step="1"
-							disabled>
+					<input
+						id="weapon-ammo-capacity"
+						title="A positive integer."
+						type="number"
+						min="1"
+						step="1"
+						disabled>
 					<br>
-					<label for="falloff-begin">Beginning falloff damage distance:</label>
+					<label for="weapon-reload-time">Reload time:</label>
 					<br>
-					<input id="falloff-begin"
-							title="A positive number. Indicates the distance from the shooter before damage falloff begins."
-							type="number"
-							step="0.00001"
-							disabled>
-					<br>
-					<label for="falloff-end">Ending falloff damage distance:</label>
-					<br>
-					<input id="falloff-end"
-							title="A positive number. Indicates the distance from the shooter after damage falloff ends."
-							type="number"
-							step="0.00001"
-							disabled>
-				</fieldset>
-				<fieldset>
-					<legend>
-						<input id="uses-ammo" type="checkbox">
-						<label for="uses-ammo">Weapon uses ammo?</label>
-					</legend>
-					<label for="ammo-count">Ammo count:</label>
-					<br>
-					<input id="ammo-count"
-							title="A positive integer. Indicates the number of rounds that can be fired before reloading."
-							type="number"
-							min="0"
-							step="1"
-							disabled>
-					<br>
-					<label for="reload-time">Reload time:</label>
-					<br>
-					<input id="reload-time"
-							title="A positive number. The time in seconds it takes to reload."
-							type="number"
-							min="0"
-							step="0.00001"
-							disabled>
+					<input
+						id="weapon-reload-time"
+						title="A positive number."
+						type="number"
+						min="0.00000"
+						step="0.00001"
+						disabled>
 					<br>
 				</fieldset>
-				<!-- TODO: Support burst fire weapons weapons and charge-up weapons -->
-				<input style="display: none;" id="include-simulation-log" type="checkbox">
-				<label style="display: none;" for="include-simulation-log">Include simulation log?</label>
-				<br>
-				<input id="submit" type="submit" value="Calculate">
+				<input id="submit" type="submit" value="Calculate results">
 			</form>
 			<fieldset>
 				<legend>Results</legend>
-				<label for="time-to-impact"><b>Time to impact:</b></label>
+				<label for="shots-to-kill">Shots to kill:</label>
+				<br>
+				<input id="shots-to-kill" type="number" readonly>
+				<br>
+				<label for="time-to-impact">Time to impact:</label>
 				<br>
 				<input id="time-to-impact" type="number" readonly>
 				<br>
-				<label for="damage-on-impact"><b>Damage on impact:</b></label>
+				<label for="damage-on-impact">Damage on impact:</label>
 				<br>
 				<input id="damage-on-impact" type="number" readonly>
 				<br>
-				<label for="stk"><b>Shots to Kill:</b></label>
+				<label for="time-spent-firing">Time spent firing:</label>
 				<br>
-				<input id="stk" type="number" readonly>
+				<input id="time-spent-firing" type="number" readonly>
 				<br>
-				<label for="reloads-required"><b>Number of reloads required:</b></label>
+				<label for="time-spent-reloading">Time spent reloading:</label>
 				<br>
-				<input id="reloads-required" type="number" readonly>
+				<input id="time-spent-reloading" type="number" readonly>
 				<br>
-				<label for="ttk"><b>Time to kill:</b></label>
+				<label for="total-time-to-kill">Total time to kill:</label>
 				<br>
-				<input id="ttk" type="number" readonly>
+				<input id="total-time-to-kill" type="number" readonly>
 				<br>
-				<ol id="simulation-log"></ol>
 			</fieldset>
 		</main>
 		<footer>
 			Created by <a href="mailto:markswoope@outlook.com">Mark Swoope</a><br>
-			<a href="ttk_formulas.pdf">Click here</a> for the formulas used by this calculator.</a>
+			<a href="ttk_formulas.pdf">Click here</a> for the formulas used by this calculator.
 		</footer>
 		<script src="ttk.js"></script>
 	</body>

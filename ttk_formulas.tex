@@ -24,7 +24,7 @@
 		t_\text{fire}\prime = t_\text{fire}(n_\text{rounds} - n_\text{reload} - 1) \\
 		t_\text{reload}\prime = t_\text{reload} n_\text{reload} \\
 		[t_\text{fire}] = \text{seconds} / \text{round} \\
-		n_\text{rounds} = \frac{n_\text{health}\prime}{n_\text{damage}\prime} \\
+		n_\text{rounds} = \bigg \lceil \frac{n_\text{health}\prime}{n_\text{damage}\prime} \bigg \rceil \\
 		n_\text{reload} = 
 			\begin{cases}
 				n_\text{ammo} = \infty & 0 \\
