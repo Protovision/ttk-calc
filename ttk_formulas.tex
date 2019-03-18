@@ -1,0 +1,46 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\doublespace
+\setlength{\parindent}{1in}
+\everymath{\displaystyle}
+\begin{document}
+	\begin{center}
+		Calculating TTK \\
+		Mark Swoope \\
+		March 2019 \\
+	\end{center}
+	\begin{align*}
+		t_\text{kill} = t_\text{fire}\prime\prime + t_\text{impact} \\
+		t_\text{fire}\prime\prime = t_\text{fire}\prime + t_\text{reload}\prime \\
+		t_\text{impact} =
+			\begin{cases}
+				a = 0 & \frac{d}{v} \\
+				\text{else} & -\frac{v}{a} + \sqrt{\frac{v^2}{a^2} + \frac{2d}{a}} \\
+			\end{cases} \\
+		t_\text{fire}\prime = t_\text{fire}(n_\text{rounds} - n_\text{reload} - 1) \\
+		t_\text{reload}\prime = t_\text{reload} n_\text{reload} \\
+		[t_\text{fire}] = \text{seconds} / \text{round} \\
+		n_\text{rounds} = \frac{n_\text{health}\prime}{n_\text{damage}\prime} \\
+		n_\text{reload} = 
+			\begin{cases}
+				n_\text{ammo} = \infty & 0 \\
+				\text{else} & \bigg \lfloor \cfrac{n_\text{health}\prime}{n_\text{damage}\prime n_\text{ammo}} \bigg \rfloor \\
+			\end{cases} \\
+		[t_\text{reload}] = \text{seconds} / \text{reload}  \\
+		n_\text{health}\prime = n_\text{health} + \lceil c_\text{protection} n_\text{armor} \rceil \\
+		n_\text{damage}\prime = 
+			\begin{cases}
+				d < d_\text{min} & n_\text{damage} \\
+				d > d_\text{max} & n_\text{min-damage} \\
+				\text{else} & \bigg \lfloor n_\text{damage} - \frac{n_\text{damage} - n_\text{min-damage}}{d_\text{max} - d_\text{min}} (d - d_\text{min}) \bigg \rfloor \\
+			\end{cases} \\
+		n_\text{ammo} \in \mathbb{N}_{>0} \cup \infty \\
+		n_\text{health} \in \mathbb{N} \\
+		c_\text{protection} \in \mathbb{R}^{+}_{\leq 1} \\
+		n_\text{armor} \in \mathbb{N} \\
+	\end{align*}
+\end{document}
