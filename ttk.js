@@ -49,6 +49,7 @@
 		} else if (rate_of_fire_unit == "mpr") {
 			seconds_per_shot /= 1000.0;
 		}
+		var damage_per_second = damage * (1.0 / seconds_per_shot);
 		reload_time *= reload_count;
 		var shoot_time = seconds_per_shot * (shots_to_kill-reload_count-1);
 		var time_to_impact = 0.0;
@@ -71,6 +72,7 @@
 			"shots-to-kill": shots_to_kill,
 			"time-to-impact": time_to_impact,
 			"damage-on-impact": damage,
+			"damage-per-second": damage_per_second,
 			"time-spent-firing": shoot_time,
 			"time-spent-reloading": reload_time,
 			"total-time-to-kill": time_to_kill
@@ -112,6 +114,7 @@
 			"shots-to-kill",
 			"time-to-impact",
 			"damage-on-impact",
+			"damage-per-second",
 			"time-spent-firing",
 			"time-spent-reloading",
 			"total-time-to-kill"
