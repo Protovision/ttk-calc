@@ -12,6 +12,13 @@
 	<body>
 		<header>
 			<h1>Game Agnostic TTK Calculator</h1>
+			<div style="text-align: right;">
+				<label for="theme">Theme:</label>
+				<select id="theme">
+					<option value="light">Light</option>
+					<option value="dark">Dark</option>
+				</select>
+			</div>
 		</header>
 		<main>
 			<form id="form">
@@ -46,7 +53,7 @@
 							id="weapon-rate-of-fire"
 							title="A positive number greater than 0."
 							type="number"
-							min="0.00001"
+							min="0"
 							step="0.00001"
 							required>
 						<select id="weapon-rate-of-fire-unit">
@@ -61,9 +68,9 @@
 						<input
 							id="target-distance"
 							type="number"
-							min="0.00000"
+							min="0"
 							step="0.00001"
-							value="0.00000">
+							value="0">
 					</fieldset>
 					<fieldset>
 						<legend>
@@ -86,10 +93,10 @@
 						<input id="target-armor-protection"
 								title="A number from 0.0 to 1.0."
 								type="number"
-								min="0.00000"
-								max="1.00000"
+								min="0"
+								max="1"
 								step="0.00001"
-								value="1.00000"
+								value="1"
 								disabled>
 					</fieldset>
 					<fieldset>
@@ -102,7 +109,7 @@
 						<input 
 							id="weapon-projectile-speed"
 							type="number"
-							min="0.00001"
+							min="0"
 							step="0.00001"
 							disabled>
 						<br>
@@ -111,9 +118,9 @@
 						<input
 							id="weapon-projectile-acceleration"
 							type="number"
-							min="0.00000"
+							min="0"
 							step="0.00001"
-							value="0.00000"
+							value="0"
 							disabled>
 					</fieldset>
 					<fieldset>
@@ -127,7 +134,7 @@
 							id="weapon-min-falloff-distance"
 							title="A positive number."
 							type="number"
-							min="0.00000"
+							min="0"
 							step="0.00001"
 							disabled>
 						<br>
@@ -137,7 +144,7 @@
 							id="weapon-max-falloff-distance"
 							title="A positive number."
 							type="number"
-							min="0.00000"
+							min="0"
 							step="0.00001"
 							disabled>
 						<br>
@@ -173,7 +180,7 @@
 							id="weapon-reload-time"
 							title="A positive number."
 							type="number"
-							min="0.00000"
+							min="0"
 							step="0.00001"
 							disabled>
 						<br>

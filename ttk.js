@@ -1,7 +1,8 @@
 (function() {
-
+	
 	var elements = {};
 	var checkbox_element_groups = {};
+	var themes = {};
 
 	function calculate_results(params)
 	{
@@ -79,6 +80,21 @@
 		};
 	};
 
+	function apply_theme(name)
+	{
+		var t = themes[name];
+		document.body.style.color = t[0];
+		document.body.style.backgroundColor = t[1];
+		elements["theme"].value = name;
+		localStorage.setItem("theme", name);
+	};
+
+	function add_event_listener_for_select(elem, func)
+	{
+		elem.addEventListener("input", func);
+		elem.addEventListener("change", func);
+	}
+
 	function update_disabled_for_checkbox_group(k)
 	{
 		var checked = Boolean(elements[k].checked);
@@ -91,6 +107,7 @@
 	function initialize()
 	{
 		[
+			"theme",
 			"form",
 			"reset",
 			"target-health",
@@ -121,6 +138,19 @@
 		].forEach(function(x) {
 			elements[x] = document.getElementById(x);
 		});
+		themes = {
+			"light": [ "#1c1c1c", "#e3e3e3", "#aaaaaa" ],
+			"dark": [ "#e3e3e3", "#1c1c1c", "#151515" ]
+		};
+		var theme_value = localStorage.getItem("theme");
+		if (theme_value != null) {
+			apply_theme(theme_value);
+		} else {
+			apply_theme(elements["theme"].value);
+		}
+		add_event_listener_for_select(elements["theme"], function() {
+			apply_theme(elements["theme"].value);
+		});
 		checkbox_element_groups = {
 			"target-has-armor": [
 				"target-armor",
@@ -142,10 +172,7 @@
 		};
 		Object.keys(checkbox_element_groups).forEach(function(k) {
 			update_disabled_for_checkbox_group(k);
-			elements[k].addEventListener("input", function() {
-				update_disabled_for_checkbox_group(k);
-			});
-			elements[k].addEventListener("change", function() {
+			add_event_listener_for_select(elements[k], function() {
 				update_disabled_for_checkbox_group(k);
 			});
 		});

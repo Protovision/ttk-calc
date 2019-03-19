@@ -1,6 +1,6 @@
 :root {
 	--font-family: 'Nanum Gothic', sans-serif;
-	--foreground-color: White;
+	--foreground-color: #e3e3e3;
 	--background-color: #1c1c1c;
 	--selection-foreground-color: Black;
 	--selection-background-color: LightSteelBlue;
@@ -11,7 +11,6 @@
 	--input-border-color-invalid: #5f0000;
 	--input-border-color-hover-focus: #d78700;
 	--input-border-color-active: Purple;
-	--input-border-color-disabled: Black;
 }
 ::selection {
 	color: var(--selection-foreground-color);
@@ -56,6 +55,7 @@ fieldset {
 	display: inline-block;
 	margin: 0.25em;
 	border: thin solid;
+	border-color: inherit;
 	padding: 1em;
 	max-width: 600px;
 }
@@ -64,8 +64,8 @@ input,select {
 	border: thin solid;
 	border-color: var(--input-border-color);
 	padding: 0.25em;
-	color: var(--foreground-color);
-	background-color: var(--background-color);
+	color: inherit;
+	background-color: inherit;
 }
 input,input[type=button],input[type=submit],select,fieldset {
 	border-radius: 4px;
@@ -86,7 +86,7 @@ input[type=submit] {
 }
 input:invalid {
 	border-color: var(--input-border-color-invalid);
-	box-shadow: 0px 0px 4px #5f0000;
+	box-shadow: 0px 0px 2px var(--input-border-color-invalid);
 }
 input:hover,
 input:focus,
@@ -101,9 +101,9 @@ select:active {
 	box-shadow: 0px 0px 4px var(--input-border-color-active);
 }
 [disabled],[disabled]:hover,[disabled]:focus,[disabled]:active {
-	border-color: var(--input-border-color-disabled);
+	color: inherit;
+	border-color: inherit;
 	box-shadow: none;
-	color: var(--input-border-color-disabled);
 }
 [readonly],[readonly]:hover,[readonly]:focus,[readonly]:active {
 	border-color: var(--input-border-color);
