@@ -141,8 +141,12 @@
 		themes = {
 			"light": [ "rgb(28,28,28)", "rgb(227,227,227)" ],
 			"dark": [ "rgb(227,227,227)", "rgb(28,28,28)" ],
-			"light-blue": [ "rgb(28,28,28)", "rgb(159,193,249)" ],
-			"dark-blue": [ "rgb(227,227,227)", "rgb(3,20,48)" ]
+			"red": [ "rgb(227,227,227)", "rgb(28,0,0)" ],
+			"green": [ "rgb(227,227,227)", "rgb(0,26,0)" ],
+			"blue": [ "rgb(227,227,227)", "rgb(3,20,48)" ],
+			"brown": [ "rgb(227,227,227)", "rgb(31,16,4)" ],
+			"purple": [ "rgb(227,227,227)", "rgb(25,0,26)" ],
+			"black": [ "rgb(227,227,227)", "rgb(0,0,0)" ]
 		};
 		var theme_value = localStorage.getItem("theme");
 		if (theme_value != null) {
