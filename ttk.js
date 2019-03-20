@@ -139,8 +139,10 @@
 			elements[x] = document.getElementById(x);
 		});
 		themes = {
-			"light": [ "#1c1c1c", "#e3e3e3", "#aaaaaa" ],
-			"dark": [ "#e3e3e3", "#1c1c1c", "#151515" ]
+			"light": [ "rgb(28,28,28)", "rgb(227,227,227)" ],
+			"dark": [ "rgb(227,227,227)", "rgb(28,28,28)" ],
+			"light-blue": [ "rgb(28,28,28)", "rgb(159,193,249)" ],
+			"dark-blue": [ "rgb(227,227,227)", "rgb(3,20,48)" ]
 		};
 		var theme_value = localStorage.getItem("theme");
 		if (theme_value != null) {
