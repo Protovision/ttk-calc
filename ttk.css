@@ -67,6 +67,10 @@ input,select {
 	color: inherit;
 	background-color: inherit;
 }
+option {
+	color: initial;
+	background-color: initial;
+}
 input,input[type=button],input[type=submit],select,fieldset {
 	border-radius: 4px;
 }
