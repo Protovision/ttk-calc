@@ -1,0 +1,79 @@
+:root {
+	--font: 'Abel', sans-serif;
+	--foreground-color: #222;
+	--background-color: #dfdfdf;
+	--link-color: steelblue;
+	--active-link-color: darkorange;
+	--highlight-foreground-color: white;
+	--highlight-background-color: steelblue;
+}
+body {
+	margin: 0.5em;
+	font-family: var(--font);
+	color: var(--foreground-color);
+	background-color: var(--background-color);
+	font-size: large;
+	line-height: 1.5;
+}
+::selection {
+	color: var(--highlight-foreground-color);
+	background: var(--highlight-background-color);
+}
+a {
+	color: var(--link-color);
+	text-decoration: none;
+}
+a:hover,a:focus {
+	text-decoration: underline;
+}
+a:active {
+	color: var(--active-link-color);
+}
+form {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+}
+fieldset {
+	margin: 0.25em;
+	border: thin solid;
+	padding: 0.5em;
+	color: inherit;
+	background-color: inherit;
+}
+input,select {
+	box-sizing: border-box;
+	margin: 0.125em 0;
+	border: thin solid;
+	padding: 0.25em;
+	color: inherit;
+	background-color: inherit;
+}
+fieldset>label,fieldset>input,fieldset>select {
+	display: block;
+	width: 100%;
+}
+input:hover,input:focus,select:hover,select:focus {
+	border-color: var(--link-color);
+}
+input:active,select:active {
+	border-color: var(--active-link-color);
+}
+input[type=button]:active,input[type=reset]:active,input[type=submit]:active {
+	color: var(--highlight-foreground-color);
+	background-color: var(--highlight-background-color);
+}
+[disabled],[disabled]:hover,[disabled]:focus,[disabled]:active {
+	color: inherit;
+	border-color: inherit;
+}
+@media screen and (min-width: 800px) {
+	main {
+		margin: 0 auto;
+		max-width: 76.5em;
+	}
+	main>fieldset {
+		margin: 0 auto 0 0;
+		max-width: 25.5em;
+	}
+}

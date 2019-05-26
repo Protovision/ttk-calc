@@ -80,15 +80,6 @@
 		};
 	};
 
-	function apply_theme(name)
-	{
-		var t = themes[name];
-		document.body.style.color = t[0];
-		document.body.style.backgroundColor = t[1];
-		elements["theme"].value = name;
-		localStorage.setItem("theme", name);
-	};
-
 	function add_event_listener_for_select(elem, func)
 	{
 		elem.addEventListener("input", func);
@@ -107,8 +98,7 @@
 	function initialize()
 	{
 		[
-			"theme",
-			"form",
+			"ttk",
 			"reset",
 			"target-health",
 			"weapon-damage",
@@ -138,25 +128,6 @@
 		].forEach(function(x) {
 			elements[x] = document.getElementById(x);
 		});
-		themes = {
-			"light": [ "rgb(28,28,28)", "rgb(227,227,227)" ],
-			"dark": [ "rgb(227,227,227)", "rgb(28,28,28)" ],
-			"red": [ "rgb(227,227,227)", "rgb(28,0,0)" ],
-			"green": [ "rgb(227,227,227)", "rgb(0,26,0)" ],
-			"blue": [ "rgb(227,227,227)", "rgb(3,20,48)" ],
-			"brown": [ "rgb(227,227,227)", "rgb(31,16,4)" ],
-			"purple": [ "rgb(227,227,227)", "rgb(25,0,26)" ],
-			"black": [ "rgb(227,227,227)", "rgb(0,0,0)" ]
-		};
-		var theme_value = localStorage.getItem("theme");
-		if (theme_value != null) {
-			apply_theme(theme_value);
-		} else {
-			apply_theme(elements["theme"].value);
-		}
-		add_event_listener_for_select(elements["theme"], function() {
-			apply_theme(elements["theme"].value);
-		});
 		checkbox_element_groups = {
 			"target-has-armor": [
 				"target-armor",
@@ -182,13 +153,13 @@
 				update_disabled_for_checkbox_group(k);
 			});
 		});
-		elements["form"].addEventListener("reset", function() {
+		elements["ttk"].addEventListener("reset", function() {
 			Object.keys(checkbox_element_groups).forEach(function(k) {
 				elements[k].checked = false;
 				update_disabled_for_checkbox_group(k);
 			});
 		});
-		elements["form"].addEventListener("submit", function(e) {
+		elements["ttk"].addEventListener("submit", function(e) {
 			e.preventDefault();
 			var results = calculate_results({
 				"target-health":
@@ -229,11 +200,9 @@
 					Number(elements["weapon-reload-time"].value)
 			});
 			Object.keys(results).forEach(function(k) {
-				console.log(k);
 				elements[k].value = Number(results[k]).toFixed(6);
 			});
 		});
 	};
-
 	initialize();
 })();
