@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>TTK Calculator</title>
+		<meta name="author" content="Mark Swoope">
+		<link rel="stylesheet" href="style.css">
+		<script defer src="main.js"></script>
+	</head>
+	<body>
+		<main>
+			<header>
+				<h1>Game Agnostic TTK Calculator</h1>
+				<p>Version 2.0</p>
+			</header>
+			<p class="horizontal">
+				<p>
+					<b>Shooter</b>
+					<div class="horizontal">
+						<div>
+							<label>Player accuracy:</label>
+							<input id="TTKCplayerAccuracy" type="number">
+							<label>%</label>
+						</div>
+						<div>
+							<label>Gun spread reduction:</label>
+							<input id="TTKCgunSpreadReduction" type="number">
+							<label>%</label>
+						</div>
+						<div>
+							<label>Damage boost:</label>
+							<input id="TTKCdamageBoost" type="number">
+							<label>%</label>
+						</div>
+						<div>
+							<label>Fire rate boost:</label>
+							<input id="TTKCfireRateBoost" type="number">
+							<label>%</label>
+						</div>
+						<div>
+							<label>Reload time reduction:</label>
+							<input id="TTKCreloadTimeReduction" type="number">
+							<label>%</label>
+						</div>
+						<div>
+							<label>Clip ammo boost:</label>
+							<input id="TTKCclipAmmoBoost" type="number">
+							<label>%</label>
+						</div>
+					</div>
+				</p>
+				<p>
+					<b>Gun</b>
+					<div class="horizontal">
+						<div>
+							<label>Damage:</label>
+							<input id="TTKCdamage" type="number">
+						</div>
+						<div>
+							<label>Fire rate:</label>
+							<input id="TTKCfireRate" type="number">
+							<select id="TTKCfireRateUnit">
+								<option value="rpm">rounds per minute</option>
+								<option value="rps">rounds per second</option>
+								<option value="spr">seconds per round</option>
+								<option value="mpr">milliseconds per round</option>
+							</select>
+						</div>
+						<div>
+							<label>Spread:</label>
+							<input id="TTKCspread" type="number">
+							<select id="TTKCspreadUnit">
+								<option value="d">degrees</option>
+								<option value="r">radians</opion>
+								<option value="mr">milliradians</option>
+							</select>
+						</div>
+						<div>
+							<label>Clip ammo:</label>
+							<input id="TTKCclipAmmo" type="number">
+						</div>
+						<div>
+							<label>Reload time:</label>
+							<input id="TTKCreloadTime" type="number">
+							<label>seconds</label>
+						</div>
+					</div>
+				</p>
+				<p>
+					<b>Target</b>
+					<div class="horizontal">
+						<div>
+							<label>Distance:</label>
+							<input id="TTKCdistance" type="number">
+							<label>meters</label>
+						</div>
+						<div>
+							<label>Width:</label>
+							<input id="TTKCwidth" type="number">
+							<label>meters</label>
+						</div>
+						<div>
+							<label>Height:</label>
+							<input id="TTKCheight" type="number">
+							<label>meters</label>
+						</div>
+						<div>
+							<label>Health:</label>
+							<input id="TTKChealth" type="number">
+						</div>
+						<div>
+							<label>Armor:</label>
+							<input id="TTKCarmor" type="number">
+						</div>
+						<div>
+							<label>Armor absorption:</label>
+							<input id="TTKCarmorAbsorption" type="number">
+							<label>%</label>
+						</div>
+						<div>
+							<label>Health regeneration:</label>
+							<input id="TTKChealthRegeneration" type="number">
+							<label>per second</label>
+						</div>
+						<div>
+							<label>Armor regeneration:</label>
+							<input id="TTKCarmorRegeneration" type="number">
+							<label>per second</label>
+						</div>
+						<div>
+							<label>Damage reduction:</label>
+							<input id="TTKCdamageReduction" type="number">
+							<label>%</label>
+						</div>
+					</div>
+				</p>
+			</p>
+			<p class="horizontal">
+				<input id="TTKCcalculate" type="button" value="Calculate">
+				<input id="TTKCreset" type="button" value="Reset">
+			</p>
+			<figure><table id="TTKCtable"></table></figure>
+			<footer>
+				<p>Made by <a rel="external noreferrer noopener" href="https://protovision.github.io/">Mark Swoope</a></p>
+				<p>Source code on <a rel="external noreferrer noopener" href="https://github.com/protovision/ttk-calc/">Github</a></p>
+				<p>Email feedback to <a rel="external noreferrer noopener" href="mailto:markswoope@outlook.com">markswoope@outlook.com</p>
+			</footer>
+		</main>
+	</body>
+</html>
