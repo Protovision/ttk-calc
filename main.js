@@ -85,7 +85,7 @@
 			const burstTtk
 			= (eHp - (bDps - eHps) / eBurstRate) / (bDps - eHps)
 			const sustainedTtk
-			= (eHp - (sDps - eHps) / eBurstRate) / (sDps - eHps)
+			= (eHp - (sDps - eHps) / eSustainedRate) / (sDps - eHps)
 			console . log(burstTtk);
 			console . log(sustainedTtk);
 			/* Time to kill */
