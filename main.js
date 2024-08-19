@@ -57,13 +57,14 @@
 			/ window . Math . cos(input . spread / 2.0);
 			/* Surface area of bullet cone on impact */
 			const cArea
-			= window . Math . PI * window . Math . pow(cRadius , 2.0);
+			= (window . Math . PI * window . Math . pow(cRadius , 2.0))
+			/ (1.0 + input . gunSpreadReduction);
 			/* Effective gun accuracy */
 			const eGunAcc
 			= (
-				cArea == 0.0
+				cArea == 0.0 || tArea > cArea
 				? 1.0
-				: tArea / (cArea / (1.0 + input . gunSpreadReduction))
+				: tArea / cArea
 			);
 			/* Effective accuracy */
 			const eAcc
