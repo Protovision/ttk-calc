@@ -270,7 +270,7 @@ body>main>footer{
 	margin-top:0;}
 .tabular>*:last-child{
 	margin-bottom:0;}
-@media all and (min-width:51rem){
+@media all and (min-width:50rem){
 	.horizontal{
 		display:flex;
 		flex-wrap:wrap;
@@ -305,7 +305,7 @@ body>main>footer{
 	
 /* Desktop */
 
-@media screen and (min-width:51rem){
+@media screen and (min-width:50rem){
 	html{
 		margin-left:calc(100vw - 100%);}
 	body{
