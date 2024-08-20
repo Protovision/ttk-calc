@@ -52,9 +52,7 @@
 			const tArea = input . width * input . height;
 			/* Radius of impact circle */
 			const cRadius
-			= input . distance 
-			* window . Math . sin(input . spread / 2.0)
-			/ window . Math . cos(input . spread / 2.0);
+			= input . distance * window . Math . tan(input . spread / 2.0);
 			/* Surface area of bullet cone on impact */
 			const cArea
 			= (window . Math . PI * window . Math . pow(cRadius , 2.0))
@@ -218,6 +216,7 @@
 					table . append(row);
 				}
 			);
+			table . scrollIntoView();
 		};
 		const clickCalculate
 		= () => {
@@ -239,6 +238,10 @@
 					}
 				}
 			);
+			window
+			. document
+			. querySelector("#TTKCparameters")
+			. scrollIntoView();
 		};
 		const start
 		= () => {
