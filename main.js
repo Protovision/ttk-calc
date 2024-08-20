@@ -8,17 +8,17 @@
 			, ["fireRateBoost" , 0]
 			, ["reloadTimeReduction" , 0]
 			, ["clipAmmoBoost" , 0]
-			, ["damage" , 10]
-			, ["fireRate" , 600]
-			, ["fireRateUnit" , 0]
+			, ["damage" , 680 /*10*/]
+			, ["fireRate" , 0.75 /*600*/]
+			, ["fireRateUnit" , 2]
 			, ["spread" , 0]
 			, ["spreadUnit" , 0]
-			, ["clipAmmo" , 50]
-			, ["reloadTime" , 0]
+			, ["clipAmmo" , 6 /*30*/]
+			, ["reloadTime" , 1.4 /*0*/]
 			, ["distance" , 100]
 			, ["width" , 0.396]
 			, ["height" , 1.82]
-			, ["health" , 100]
+			, ["health" , 5400 /*100*/]
 			, ["armor" , 0]
 			, ["armorAbsorption" , 66]
 			, ["healthRegeneration" , 0]
@@ -83,9 +83,9 @@
 			const eHp 
 			= input . health + input . armor * input . armorAbsorption;
 			const burstTtk
-			= (eHp - (bDps - eHps) / eBurstRate) / (bDps - eHps)
+			= eHp / (bDps - eHps);
 			const sustainedTtk
-			= (eHp - (sDps - eHps) / eSustainedRate) / (sDps - eHps)
+			= eHp / (sDps - eHps);
 			console . log(burstTtk);
 			console . log(sustainedTtk);
 			/* Time to kill */
@@ -93,10 +93,11 @@
 			= (
 				/* Can kill without reloading */
 				bDps > eHps && burstTtk <= eSecondsPerBurst
-				? burstTtk
+				? burstTtk - ((bDps - eHps) / eBurstRate / (bDps - eHps))
 				/* Can kill with reloading */
 				: sDps > eHps
-				? sustainedTtk
+				? sustainedTtk 
+				- ((sDps - eHps) / eSustainedRate) / (sDps - eHps)
 				/* Cannot kill */
 				: "Infinity"
 			);
