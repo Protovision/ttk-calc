@@ -105,9 +105,11 @@
 			const timeSpentReloading
 			= reloadCount * eReloadTime;
 			const shotsRequired
-			= (
+			= window
+			. Math
+			. ceil(
 				timeSpentReloading == 0.0
-				? burstTtk * eBurstRate 
+				? burstTtk * eBurstRate
 				: window
 				. Math
 				. floor(sustainedTtk - reloadCount * eReloadTime) 
@@ -124,28 +126,14 @@
 			);
 			return(
 				[
-					["Time to kill" , ttk + " seconds"]
-					, ["Time spent firing" , timeSpentFiring + " seconds"]
-					, ["Time spent reloading" , timeSpentReloading + " seconds"]
+					["Seconds to kill" , ttk]
+					, ["Seconds spent firing" , timeSpentFiring]
+					, ["Seconds spent reloading" , timeSpentReloading]
 					, ["Shots fired" , shotsRequired]
 					, ["Reload count" , reloadCount]
-					, ["Effective health" , eHp]
-					, ["Effective healing per second" , eHps]
-					, ["Sustained damage per second" , sDps]
-					, ["Burst damage per second" , bDps]
 					, ["Effective accuracy" , eAcc * 100.0 + "%"]
-					, ["Effective gun accuracy" , eGunAcc * 100.0 + "%"]
-					, ["Effective damage" , eDamage]
-					, [
-						"Effective sustained fire rate" 
-						, eSustainedRate + " rounds per second"
-					]
-					, [
-						"Effective burst fire rate" 
-						, eBurstRate + " rounds per second"
-					]
-					, ["Effective reload time" , eReloadTime + " seconds"]
-					, ["Effective clip ammo" , eClipAmmo + " rounds"]
+					, ["Sustained damage per second" , sDps / eAcc]
+					, ["Burst damage per second" , bDps / eAcc]
 				]
 			);
 		};
