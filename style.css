@@ -169,18 +169,30 @@ ins{
 	text-decoration:overline solid 1px;}
 u{
 	text-decoration:underline wavy 1px;}
-a:hover{
-	text-decoration:underline solid 1px;}
-a:active{
-	text-decoration:none;}
 
 /* Input */
 
+a,
 input,
 select{
-	margin:0.125em 0;
+	border-bottom:1px solid;
+	text-decoration:none;
+}
+a:focus,
+input:focus,
+select:focus{
 	border:1px solid;
-	padding:0 0.25em;
+}
+a:active,
+input:active,
+select:active{
+	border:none;
+	border-top:1px solid;
+}
+input,
+select{
+	margin:0.25rem 0;
+	padding:0 0.25rem;
 	appearance:textfield;
 	vertical-align:center;
 }
@@ -195,51 +207,67 @@ body{
 	background-color:#eee;
 	color:#111;}
 hr{
-	height:4px;
 	background-color:#111;}
-a,input,select{
-	color:#07b;
+a,
+input,
+select,
+a:focus,
+input:focus,
+select:focus{
+	border-color:#07b;
+	color:#111;
 	background-color:#eee;}
 a:active,input:active,select:active{
-	color:#0b7;
-	background-color:#eee;}
+	border-color:#0b7;}
 ::selection,
 mark{
-	background-color:#ff0;}
+	background-color:#ff0;
+	color:#111;}
 @media (prefers-color-scheme:dark){
 	body{
 		background-color:#111;
 		color:#eee;}
 	hr{
 		background-color:#eee;}
-	a,input,select{
-		color:#09d;
+	a,
+	input,
+	select,
+	a:focus,
+	input:focus,
+	select:focus{
+		border-color:#09d;
+		color:#eee;
 		background-color:#111;}
 	a:active,input:active,select:active{
-		color:#0d9;
-		background-color:#111;}
+		border-color:#0d9;}
 	::selection,
 	mark{
+		background-color:#ff0;
 		color:#111;}}
 @supports (color-scheme:light dark) and
 	(background-color:Canvas) and
 	(color:CanvasText) and
 	(background-color:Mark) and
 	(color:MarkText) and
-	(color:LinkText) and
-	(color:ActiveText){
+	(border-color:LinkText) and
+	(border-color:ActiveText){
 	body{
 		color-scheme:light dark;
 		background-color:Canvas;
 		color:CanvasText;}
 	hr{
 		background-color:CanvasText;}
-	a,input,select{
-		color:LinkText;
+	a,
+	input,
+	select,
+	a:focus,
+	input:focus,
+	select:focus{
+		border-color:LinkText;
+		color:CanvasText;
 		background-color:Canvas;}
 	a:active,input:active,select:active{
-		color:ActiveText;
-		background-color:Canvas;}
+		border-color:ActiveText;}
 	::selection,
 	mark{
 		background-color:Mark;
@@ -248,10 +276,9 @@ mark{
 /* Special styling */
 
 body>main>header{
-	border-top:2px solid;
-	border-bottom:2px solid;}
+	border-bottom:1px dashed;}
 body>main>footer{
-	border-top:2px solid;}
+	border-top:1px dashed;}
 .math{
 	font-family:math,sans-serif;}
 .no-margins{
