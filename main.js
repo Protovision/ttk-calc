@@ -39,10 +39,12 @@
 			/* Time spent firing before reload */
 			const eSecondsPerBurst
 			= 1.0 / eBurstRate * eClipAmmo;
+			/* Time spent firing to time spent reloading ratio */
+			const firingTimeOverReloadingTime
+			= eSecondsPerBurst / (eSecondsPerBurst + eReloadTime);
 			/* Effective sustained fire rate */
 			const eSustainedRate
-			= eBurstRate 
-			* (eSecondsPerBurst / (eSecondsPerBurst + eReloadTime));
+			= eBurstRate * firingTimeOverReloadingTime;
 			/* Effective damage */
 			const eDamage
 			= input . damage 
@@ -84,22 +86,49 @@
 			= eHp / (bDps - eHps);
 			const sustainedTtk
 			= eHp / (sDps - eHps);
-			window . console . log(burstTtk , sustainedTtk);
+			const killableWithoutReload
+			= (bDps > eHps && burstTtk <= eSecondsPerBurst);
+			const killableWithReload = (sDps > eHps);
+			const unkillable 
+			= (!(killableWithoutReload || killableWithReload));
+			const reloadCount
+			= (
+				killableWithoutReload
+				? 0.0
+				: window
+				. Math
+				. floor(
+					(sustainedTtk - sustainedTtk * firingTimeOverReloadingTime)
+					/ eReloadTime
+				)
+			);
+			const timeSpentReloading
+			= reloadCount * eReloadTime;
+			const shotsRequired
+			= (
+				timeSpentReloading == 0.0
+				? burstTtk * eBurstRate 
+				: window
+				. Math
+				. floor(sustainedTtk - reloadCount * eReloadTime) 
+				* eBurstRate
+			);
+			const timeSpentFiring
+			= shotsRequired / eBurstRate - 1.0 / eBurstRate;
 			/* Time to kill */
 			const ttk
 			= (
-				/* Can kill without reloading */
-				bDps > eHps && burstTtk <= eSecondsPerBurst
-				? burstTtk - 1.0 / eBurstRate 
-				/* Can kill with reloading */
-				: sDps > eHps
-				? sustainedTtk - 1.0 / eSustainedRate
-				/* Cannot kill */
-				: "Infinity"
+				unkillable
+				? "Infinity"
+				: timeSpentFiring + timeSpentReloading
 			);
 			return(
 				[
 					["Time to kill" , ttk + " seconds"]
+					, ["Time spent firing" , timeSpentFiring + " seconds"]
+					, ["Time spent reloading" , timeSpentReloading + " seconds"]
+					, ["Shots fired" , shotsRequired]
+					, ["Reload count" , reloadCount]
 					, ["Effective health" , eHp]
 					, ["Effective healing per second" , eHps]
 					, ["Sustained damage per second" , sDps]
