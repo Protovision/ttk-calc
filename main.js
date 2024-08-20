@@ -222,7 +222,7 @@
 		= () => {
 			render(calculate(input()));
 		};
-		const clickReset
+		const reset
 		= () => {
 			parameters
 			. forEach(
@@ -238,6 +238,10 @@
 					}
 				}
 			);
+		};
+		const clickReset
+		= () => {
+			reset();
 			window
 			. document
 			. querySelector("#TTKCparameters")
@@ -260,7 +264,8 @@
 					);
 				}
 			);
-			clickReset();
+			reset();
+			window . scrollTo(0 , 0);
 		};
 		start();
 	}
