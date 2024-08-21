@@ -39,12 +39,15 @@
 			/* Time spent firing before reload */
 			const eSecondsPerBurst
 			= 1.0 / eBurstRate * eClipAmmo;
-			/* Time spent firing to time spent reloading ratio */
-			const firingTimeOverReloadingTime
+			/* Percentage of time spent firing */
+			const percentFiringTime
 			= eSecondsPerBurst / (eSecondsPerBurst + eReloadTime);
+			/* Percentage of time spend reloading */
+			const percentReloadingTime
+			= eReloadTime / (eSecondsPerBurst + eReloadTime);
 			/* Effective sustained fire rate */
 			const eSustainedRate
-			= eBurstRate * firingTimeOverReloadingTime;
+			= eBurstRate * percentFiringTime;
 			/* Effective damage */
 			const eDamage
 			= input . damage 
@@ -69,10 +72,10 @@
 			/* Effective accuracy */
 			const eAcc
 			= input . playerAccuracy * eGunAcc;
-			/* Burst damage per second (DPS without reloads) */
+			/* Burst DPS */
 			const bDps
 			= eAcc * eDamage * eBurstRate;
-			/* Sustained damage per second (DPS with reloads) */
+			/* Sustained DPS */
 			const sDps
 			= eAcc * eDamage * eSustainedRate;
 			/* Effective healing per second */
@@ -82,54 +85,49 @@
 			/* Effective health */
 			const eHp 
 			= input . health + input . armor * input . armorAbsorption;
-			const burstTtk
-			= eHp / (bDps - eHps);
-			const sustainedTtk
-			= eHp / (sDps - eHps);
-			const killableWithoutReload
-			= (bDps > eHps && burstTtk <= eSecondsPerBurst);
-			const killableWithReload = (sDps > eHps);
-			const unkillable 
-			= (!(killableWithoutReload || killableWithReload));
+			const fractionalReloadCount
+			= (
+				eReloadTime == 0.0 
+				|| eHp / (bDps - eHps) - 1.0 / eBurstRate <= eSecondsPerBurst
+				? 0.0
+				: eHp 
+				/ (sDps - eHps)
+				* percentReloadingTime 
+				/ eReloadTime
+			);
+			const fractionalReloadingTime 
+			= fractionalReloadCount * eReloadTime;
 			const reloadCount
 			= (
-				killableWithoutReload
+				fractionalReloadCount == 0.0
 				? 0.0
-				: window
-				. Math
-				. floor(
-					(sustainedTtk - sustainedTtk * firingTimeOverReloadingTime)
-					/ eReloadTime
-				)
+				: fractionalReloadCount
+				== window . Math . trunc(fractionalReloadCount)
+				? fractionalReloadCount - 1.0
+				: window . Math . floor(fractionalReloadCount)
 			);
-			const timeSpentReloading
-			= reloadCount * eReloadTime;
-			const shotsRequired
+			const reloadingTime = reloadCount * eReloadTime;
+			const shotCount
 			= window
 			. Math
 			. ceil(
-				timeSpentReloading == 0.0
-				? burstTtk * eBurstRate
-				: window
-				. Math
-				. floor(sustainedTtk - reloadCount * eReloadTime) 
+				reloadCount == 0.0
+				? eHp / (bDps - eHps) * eBurstRate
+				: (
+					eHp / (sDps - eHps) 
+					- fractionalReloadingTime 
+				) 
 				* eBurstRate
 			);
-			const timeSpentFiring
-			= shotsRequired / eBurstRate - 1.0 / eBurstRate;
-			/* Time to kill */
-			const ttk
-			= (
-				unkillable
-				? "Infinity"
-				: timeSpentFiring + timeSpentReloading
-			);
+			const firingTime
+			= (shotCount - 1.0) / eBurstRate;
+			const ttk = firingTime + reloadingTime;
 			return(
 				[
 					["Seconds to kill" , ttk]
-					, ["Seconds spent firing" , timeSpentFiring]
-					, ["Seconds spent reloading" , timeSpentReloading]
-					, ["Shots fired" , shotsRequired]
+					, ["Seconds firing" , firingTime]
+					, ["Seconds reloading" , reloadingTime]
+					, ["Shot count" , shotCount]
 					, ["Reload count" , reloadCount]
 					, ["Effective accuracy" , eAcc * 100.0 + "%"]
 					, ["Sustained damage per second" , sDps / eAcc]
